@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ============================================================================ -->
+    <!-- HEAD SECTION: Metadata, SEO, Favicon, dan Stylesheets -->
+    <!-- ============================================================================ -->
+
+    <!-- Metadata Dasar -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rizki Afandi | Junior Software Developer Portfolio</title>
+    <meta name="description" content="Portfolio Rizki Afandi, Junior Software Developer yang fokus pada pembuatan pengalaman web modern, bersih, dan fungsional.">
+    <meta name="keywords" content="Rizki Afandi, Software Developer, Web Design, Portfolio, Rekayasa Perangkat Lunak, Frontend Developer">
+    <meta name="author" content="Rizki Afandi">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rizkiafandi.dev/"> <!-- Ganti dengan domain Anda -->
+    <meta property="og:title" content="Rizki Afandi | Junior Software Developer Portfolio">
+    <meta property="og:description" content="Crafting clean, modern, and functional web experiences.">
+    <meta property="og:image" content="https://rizkiafandi.dev/media/me.jpg"> <!-- Ganti dengan URL absolut gambar Anda -->
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rizki Afandi | Junior Software Developer Portfolio">
+    <meta name="twitter:description" content="Crafting clean, modern, and functional web experiences.">
+    <meta name="twitter:image" content="https://rizkiafandi.dev/media/me.jpg">
+
+    <!-- Favicon (Ganti dengan path favicon Anda) -->
+    <!-- <link rel="icon" href="media/favicon.ico" type="image/x-icon"> -->
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- ============================================================================ -->
+    <!-- BODY SECTION: Konten Utama Website -->
+    <!-- ============================================================================ -->
+
+    <!-- Preloader -->
+    <!-- Menampilkan animasi loading sebelum konten utama dimuat -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Video Latar Belakang Global -->
+    <!-- Video ini akan berjalan di belakang semua konten, memberikan efek dinamis -->
+    <div class="video-bg-container">
+        <video autoplay loop playsinline muted poster="media/hero-bg-fallback.jpg" preload="auto" class="global-video" id="bgVideo">
+            <source src="media/video.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- Navbar Section -->
+    <!-- Navigasi utama website, termasuk logo, link, dan tombol tema -->
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Rizz<span>Dev</span></a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Proyek</a></li>
+                <li><a href="#services">Layanan</a></li>
+                <li><a href="#contact">Kontak</a></li>
+            </ul>
+            <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="menu-toggle" aria-label="Buka Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================================================ -->
+    <!-- MAIN CONTENT AREA -->
+    <!-- Semua konten utama website berada di dalam tag <main> -->
+    <!-- ============================================================================ -->
+    <!-- Main Content Area -->
+    <main>
+    <!-- Header / Hero Section -->
+    <!-- Bagian pembuka website dengan perkenalan dan foto profil -->
+    <header class="hero">
+        <div class="container hero-flex">
+            <div class="hero-text-wrapper reveal-left">
+                <div class="hero-text">
+                    <p class="greeting reveal-top">Halo semua, saya</p>
+                    <h1 class="hero-name"><span id="typing-text"></span><span class="cursor">|</span></h1>
+                    <p class="description">Crafting clean, modern, and functional web experiences. Student at SMK Rekayasa Perangkat Lunak.</p>
+                    <div class="hero-btns">
+                        <a href="#projects" class="btn">Lihat Project</a>
+                        <a href="media/cv-template.html" target="_blank" class="btn btn-outline btn-cv" title="Lihat Curriculum Vitae Rizki Afandi"><i class="fas fa-eye"></i> Lihat CV</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image reveal-right">
+                <div class="photo-frame">
+                    <img src="media/me.jpg" alt="Rizki Afandi">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <!-- Informasi detail tentang diri Anda, pendidikan, dan minat -->
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title reveal-left">Tentang Saya</h2>
+            <div class="about-content reveal-bottom">
+                <div class="about-text">
+                    <p>Halo! Saya Rizki, siswa kelas 12 di SMK Rekayasa Perangkat Lunak yang bersemangat dalam membangun ekosistem web yang efisien. Saya memiliki ketertarikan kuat pada <strong>Frontend Development</strong> dan <strong>UI/UX Design</strong>.</p>
+                    <p>Selama masa sekolah, saya telah menyelesaikan berbagai tantangan pemrograman mulai dari algoritma dasar hingga membangun aplikasi web fungsional. Saya percaya bahwa kode yang bersih adalah kunci dari produk yang hebat.</p>
+                    <div class="about-info">
+                        <span><strong>Lokasi:</strong> Indonesia</span>
+                        <span><strong>Pendidikan:</strong> SMK Rekayasa Perangkat Lunak</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <!-- Daftar keahlian Anda dengan progress bar visual -->
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title reveal-left">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card reveal-bottom">
+                    <i class="fab fa-html5"></i>
+                    <span class="skill-name">HTML</span>
+                    <div class="progress-bar-container"><div class="progress-bar" data-progress="85"></div></div>
+                </div>
+                <div class="skill-card reveal-bottom">
+                    <i class="fab fa-css3-alt"></i>
+                    <span class="skill-name">CSS</span>
+                    <div class="progress-bar-container"><div class="progress-bar" data-progress="80"></div></div>
+                </div>
+                <div class="skill-card reveal-bottom">
+                    <i class="fab fa-js"></i>
+                    <span class="skill-name">JavaScript</span>
+                    <div class="progress-bar-container"><div class="progress-bar" data-progress="75"></div></div>
+                </div>
+                <div class="skill-card reveal-bottom">
+                    <i class="fab fa-python"></i>
+                    <span class="skill-name">Python</span>
+                    <div class="progress-bar-container"><div class="progress-bar" data-progress="90"></div></div>
+                </div>
+                <div class="skill-card reveal-bottom">
+                    <i class="fab fa-php"></i>
+                    <span class="skill-name">PHP</span>
+                    <div class="progress-bar-container"><div class="progress-bar" data-progress="60"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <!-- Galeri proyek-proyek terbaik Anda -->
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title reveal-left">Proyek Terpilih</h2>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card reveal-bottom">
+                    <div class="project-img">
+                        <img src="https://images.unsplash.com/photo-1540350394557-8d14678e7f91?w=500&q=80" alt="Todo List App">
+                    </div>
+                    <div class="project-info">
+                        <h3>Todo List App</h3>
+                        <p>Aplikasi pengelola tugas harian dengan fitur penyimpanan lokal.</p>
+                        <div class="project-tags">
+                            <span>HTML</span>
+                            <span>CSS</span>
+                            <span>JavaScript</span>
+                        </div>
+                        <a href="https://demo.example.com/todo-list" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a> <!-- Ganti dengan URL demo proyek Anda -->
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="project-card reveal-bottom">
+                    <div class="project-img">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80" alt="Website Portfolio">
+                    </div>
+                    <div class="project-info">
+                        <h3>Website Portfolio</h3>
+                        <p>Desain web responsif modern menggunakan HTML, CSS, dan JS murni.</p>
+                        <div class="project-tags">
+                            <span>UI/UX</span>
+                            <span>Responsive</span>
+                            <span>Animation</span>
+                        </div>
+                        <a href="index.html" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a> <!-- Ganti dengan URL demo proyek Anda -->
+                    </div>
+                </div>
+                <!-- Project 3 -->
+                <div class="project-card reveal-bottom">
+                    <div class="project-img">
+                        <img src="https://pencatat-keuangan-omega.vercel.app/media/icon.png" alt="Money Tracker">
+                    </div>
+                    <div class="project-info">
+                        <h3>Money Tracker</h3>
+                        <p>Aplikasi pelacakan pengeluaran dan pemasukan dengan fitur grafik dan laporan bulanan.</p>
+                        <div class="project-tags">
+                            <span>Logic</span>
+                            <span>Vanilla JS</span>
+                        </div>
+                        <a href="https://pencatat-keuangan-omega.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a> <!-- Ganti dengan URL demo proyek Anda -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services & FAQ Section (Accordion) -->
+    <!-- Bagian layanan yang ditawarkan dan pertanyaan umum dalam format akordeon -->
+    <!-- Services & FAQ Section (Accordion) -->
+    <section id="services" class="section">
+        <div class="container">
+            <h2 class="section-title reveal-left">Layanan & FAQ</h2>
+            <div class="accordion reveal-bottom">
+                <div class="accordion-item">
+                    <button class="accordion-header">Apa saja layanan yang saya tawarkan? <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content">
+                        <p>Saya menawarkan jasa pembuatan website responsif dari nol, desain antarmuka pengguna (UI), dan optimasi performa website untuk pengalaman pengguna yang lebih baik.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Teknologi apa yang saya gunakan? <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content">
+                        <p>Fokus utama saya adalah teknologi web modern seperti HTML5, CSS3 (termasuk Tailwind/Sass), JavaScript modern (ES6+), dan alat kolaborasi seperti Git.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">UI/UX Design & Prototyping <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content">
+                        <p>Saya membantu mengubah ide Anda menjadi desain visual yang menarik di Figma, memastikan pengalaman pengguna yang intuitif sebelum masuk ke tahap pengembangan.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Website Maintenance & SEO <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content">
+                        <p>Layanan pemeliharaan berkala, optimasi kecepatan loading, dan penerapan teknik SEO dasar agar website Anda lebih mudah ditemukan di mesin pencari.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <!-- Formulir kontak untuk berkomunikasi dengan Anda -->
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title reveal-left">Mari Berdiskusi</h2>
+            <form id="contact-form" class="contact-form reveal-bottom">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Nama Lengkap" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email Anda" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="message" rows="5" placeholder="Pesan Anda" required></textarea>
+                </div>
+                <button type="submit" class="btn">Kirim Pesan</button>
+                <div id="form-status" style="margin-top: 1rem; font-weight: 500;"></div>
+            </form>
+        </div>
+    </section>
+    </main>
+    <!-- ============================================================================ -->
+    <!-- END MAIN CONTENT AREA -->
+    <!-- ============================================================================ -->
+
+    <!-- Tombol Back to Top -->
+    <!-- Muncul saat di-scroll ke bawah, untuk kembali ke atas halaman dengan mulus -->
+    <button id="back-to-top" title="Go to top" aria-label="Back to Top"><i class="fas fa-arrow-up"></i></button>
+    <!-- Tombol Mute/Unmute Video -->
+    <!-- Mengontrol suara video latar belakang -->
+    <div class="video-controls" style="position: fixed; bottom: 30px; left: 30px; z-index: 1000;">
+        <button id="mute-toggle" class="mute-btn" style="position: static;" aria-label="Toggle Mute">
+            <i class="fas fa-volume-mute"></i>
+        </button>
+    </div>
+
+    <!-- Footer Section -->
+    <!-- Informasi hak cipta dan link sosial media -->
+    <!-- Footer Section -->
+    <footer>
+        <div class="container footer-content">
+            <a href="#" class="logo reveal-top">Rizz<span>Dev</span></a>
+            <div class="social-links reveal-bottom">
+                <a href="https://github.com/RIZKIIk" target="_blank" rel="noopener noreferrer" aria-label="Github" title="Kunjungi GitHub Saya"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="Kunjungi LinkedIn Saya"><i class="fab fa-linkedin"></i></a>
+                <a href="https://instagram.com/rizz_xyz10" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Follow Instagram Saya"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year"></span> Rizz Dev. Crafted with <i class="fas fa-heart"></i> by Anak RPL.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
