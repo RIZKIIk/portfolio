@@ -222,11 +222,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Header Scroll Effect
+    // 11. ScrollSpy: Highlight active nav link on scroll
     const navbar = document.querySelector('.navbar');
     const backToTop = document.getElementById('back-to-top');
+    const scrollProgress = document.getElementById('scroll-progress');
+    const sections = document.querySelectorAll('section, header');
+    const navItems = document.querySelectorAll('.nav-links a');
 
+    const handleScrollSpy = () => {
+        let current = "";
+        sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (window.scrollY >= sectionTop - 150) {
+                current = section.getAttribute("id") || "";
+            }
+        });
+
+        navItems.forEach((a) => {
+            a.classList.remove("active");
+            if (a.getAttribute("href").includes(current) && current !== "") {
+                a.classList.add("active");
+            }
+        });
+    };
+
+    window.addEventListener('scroll', handleScrollSpy);
+
+    // Header & Progress Effect
     window.addEventListener('scroll', () => {
+        // Update Scroll Progress Bar
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        if (scrollProgress) scrollProgress.style.width = scrolled + "%";
+
+        // Navbar & Back to Top visibility
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
             backToTop.classList.add('show');

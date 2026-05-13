@@ -9,13 +9,14 @@
     --accent: #6366f1; /* Indigo modern */
     --text-main: #ffffff; /* Warna teks utama */
     --text-muted: #cbd5e1; /* Warna teks sekunder (lebih terang untuk keterbacaan) */
-    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); /* Bayangan kartu */
+    --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); /* Bayangan kartu lebih dalam */
     --nav-bg: rgba(15, 23, 42, 0.8);
     --video-overlay-color: rgba(5, 8, 16, 0.4);
+    --accent-glow: rgba(99, 102, 241, 0.3);
     /* Transisi umum untuk hover/focus */
     --transition: all 0.3s ease;
     /* Transisi khusus untuk perubahan tema (background, color, backdrop-filter) */
-    --theme-transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.8s ease;
+    --theme-transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
 }
 
 /* Light Mode Variables */
@@ -27,6 +28,7 @@ body.light-mode {
     --text-muted: #334155; /* Warna teks sekunder lebih tegas */
     --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     --nav-bg: rgba(255, 255, 255, 0.8);
+    --accent-glow: rgba(99, 102, 241, 0.1);
     --video-overlay-color: rgba(241, 245, 249, 0.6); /* Overlay lebih kuat di mode terang */
 }
 
@@ -55,6 +57,17 @@ body {
     color: var(--text-main);
     line-height: 1.6;
     transition: var(--theme-transition);
+}
+
+/* Scroll Progress Bar */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(to right, var(--accent), #818cf8);
+    z-index: 1001;
 }
 
 /* ============================================================================ */
@@ -170,6 +183,10 @@ body {
 }
 
 .nav-links a:hover::after { width: 100%; }
+
+/* Active State for ScrollSpy */
+.nav-links a.active { color: var(--accent); }
+.nav-links a.active::after { width: 100%; }
 
 .nav-links a:hover { color: var(--accent); }
 
@@ -430,17 +447,19 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
     padding: 1.5rem;
     border-radius: 20px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--card-shadow);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
 /* Efek hover yang menarik pada kartu skill */
 .skill-card:hover {
     transform: translateY(-10px) scale(1.05);
     border-color: var(--accent);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 15px 30px var(--accent-glow);
 }
 
 .skill-card .skill-name {
