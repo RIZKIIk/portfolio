@@ -33,22 +33,6 @@ Portofolio ini bukan sekadar pameran karya, melainkan implementasi teknik web mo
 *   **Modern Interaction**: Dilengkapi dengan *ScrollSpy*, *Custom Ripple Effects*, dan *Typing Animations*.
 *   **Mobile Optimized**: Desain *fully responsive* yang memastikan pengalaman premium di layar smartphone maupun desktop.
 
-## 📸 Preview
-
-<div align="center">
-  <table>
-    <tr>
-      <td><b>Desktop View (Dark Mode)</b></td>
-      <td><b>Mobile View (Responsive)</b></td>
-    </tr>
-    <tr>
-      <td><img src="media/desktop-preview.png" width="500" alt="Desktop Preview"></td>
-      <td><img src="media/mobile-preview.png" width="200" alt="Mobile Preview"></td>
-    </tr>
-  </table>
-  <p><i>Note: Ganti path gambar di atas dengan screenshot asli portofolio kamu untuk tampilan profesional.</i></p>
-</div>
-
 ##  Built With
 
 Teknologi utama yang digunakan tanpa menggunakan framework eksternal yang berat:
@@ -58,21 +42,6 @@ Teknologi utama yang digunakan tanpa menggunakan framework eksternal yang berat:
 *   JavaScript - ES6+, DOM Manipulation, Observer API.
 *   FontAwesome - Iconography.
 *   Google Fonts - Plus Jakarta Sans.
-
-## 🚀 Getting Started
-
-Untuk menjalankan proyek ini di mesin lokal Anda:
-
-### Prerequisites
-Gunakan browser modern (Chrome, Edge, Safari, atau Firefox) untuk mendukung fitur *Backdrop Filter*.
-
-### Installation
-1. Clone the repo
-   ```sh
-   git clone https://github.com/RIZKIIk/portfolio.git
-   ```
-2. Open `index.html` in your browser.
-3. (Recommended) Use **Live Server** extension in VS Code for hot reload.
 
 ## 🏗 Project Structure
 
@@ -101,6 +70,6 @@ Proyek ini dioptimasi untuk mendapatkan skor tinggi pada Lighthouse:
 ---
 
 <div align="center">
-  <p>Dibuat dengan ❤️ oleh Anak RPL.</p>
+  <p>Dibuat dengan ❤️ oleh Rizz.</p>
   <a href="#top">Back to top</a>
 </div>
