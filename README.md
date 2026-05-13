@@ -9,7 +9,7 @@
     <a href="https://github.com/RIZKIIk/portfolio"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="#-preview">View Demo</a>
+    <a href="https://portfolio-rizkiik.vercel.app/">View Demo</a>
     ·
     <a href="https://github.com/RIZKIIk/portfolio/issues">Report Bug</a>
     ·
