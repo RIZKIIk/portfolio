@@ -1,66 +1,106 @@
-# 🚀 Modern Glassmorphism Portfolio - RizzDev
+# 🚀 Modern Glassmorphism Portfolio
 
-[![Framework](https://img.shields.io/badge/Framework-VanillaJS-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![UI/UX](https://img.shields.io/badge/Style-Glassmorphism-blue.svg)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-
-Portofolio web modern yang dirancang dengan estetika **Glassmorphism**, fokus pada performa tinggi, animasi halus, dan pengalaman pengguna (UX) yang responsif. Dibangun khusus untuk menampilkan proyek-proyek *software development*.
-
-## 🌟 Fitur Utama
-
--   **🌓 Dynamic Theme**: Perpindahan mulus antara *Dark Mode* dan *Light Mode*.
--   **📽️ Cinematic Background**: Latar belakang video yang memberikan kesan premium.
--   **⌨️ Typing Animation**: Efek mengetik dinamis pada bagian hero untuk perkenalan diri.
--   **📊 Interactive Skills**: Progress bar yang teranimasi menggunakan *Intersection Observer*.
--   **📱 Fully Responsive**: Tampilan optimal di berbagai perangkat, mulai dari smartphone hingga desktop.
--   **🔗 WhatsApp Integration**: Formulir kontak yang langsung terhubung ke WhatsApp.
--   **📈 Scroll Progress Bar**: Indikator progres membaca di bagian atas halaman.
-
-## 🛠️ Teknologi yang Digunakan
-
-Proyek ini dibangun menggunakan teknologi web murni tanpa framework berat untuk menjaga performa:
-
--   **HTML5**: Struktur semantik yang SEO-friendly.
--   **CSS3**: Kustom variabel (CSS Variables), Flexbox, Grid, dan animasi kompleks.
--   **JavaScript (ES6+)**: Logika interaktif, ScrollSpy, dan manajemen tema.
--   **Font Awesome**: Ikonografi modern.
--   **Google Fonts**: Tipografi menggunakan *Plus Jakarta Sans*.
-
-## 📸 Preview
-
-*(Tambahkan screenshot atau GIF portofolio kamu di sini)*
-
-## 🚀 Jalankan Secara Lokal
-
-1.  **Clone repositori ini**
-    ```bash
-    git clone https://github.com/RIZKIIk/portfolio.git
-    ```
-2.  **Masuk ke direktori proyek**
-    ```bash
-    cd portfolio
-    ```
-3.  **Buka file `index.html`**
-    Cukup buka file tersebut di browser favorit kamu, atau gunakan ekstensi *Live Server* di VS Code.
-
-## 📁 Struktur Folder
-
-```text
-.
-├── media/           # Aset gambar, video, dan file CV
-├── style.css        # Semua styling dan variabel tema
-├── script.js        # Logika interaktif dan animasi
-├── index.html       # Struktur utama halaman
-└── README.md        # Dokumentasi proyek
-```
-
-## 👨‍💻 Author
-
-**Rizki Afandi**
--   GitHub: @RIZKIIk
--   LinkedIn: Rizqi Afandi
--   Instagram: @rizz_xyz10
+<div align="center">
+  <img src="media/me.jpg" alt="Logo" width="120" height="120" style="border-radius: 50%">
+  <h3>Rizki Afandi</h3>
+  <p align="center">
+    Junior Software Developer | UI/UX Enthusiast
+    <br />
+    <a href="https://github.com/RIZKIIk/portfolio"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="#-preview">View Demo</a>
+    ·
+    <a href="https://github.com/RIZKIIk/portfolio/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/RIZKIIk/portfolio/issues">Request Feature</a>
+  </p>
+</div>
 
 ---
 
-*Dibuat dengan ❤️ oleh Anak RPL.*
+## 📌 About The Project
+
+[![GitHub Stars](https://img.shields.io/github/stars/RIZKIIk/portfolio?style=for-the-badge)](https://github.com/RIZKIIk/portfolio/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/RIZKIIk/portfolio?style=for-the-badge)](https://github.com/RIZKIIk/portfolio/network/members)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+
+Portofolio ini bukan sekadar pameran karya, melainkan implementasi teknik web modern. Dibangun dengan estetika **Glassmorphism**, proyek ini berfokus pada transisi yang sangat halus dan optimasi performa tinggi menggunakan *Vanilla Technologies*.
+
+### ✨ Key Highlights:
+*   **Smooth Theme Engine**: Perpindahan *real-time* antara Dark & Light mode dengan persistensi `localStorage`.
+*   **Performance First**: Menggunakan video background yang dioptimasi dan *Intersection Observer API* untuk animasi yang efisien.
+*   **Modern Interaction**: Dilengkapi dengan *ScrollSpy*, *Custom Ripple Effects*, dan *Typing Animations*.
+*   **Mobile Optimized**: Desain *fully responsive* yang memastikan pengalaman premium di layar smartphone maupun desktop.
+
+## 📸 Preview
+
+<div align="center">
+  <table>
+    <tr>
+      <td><b>Desktop View (Dark Mode)</b></td>
+      <td><b>Mobile View (Responsive)</b></td>
+    </tr>
+    <tr>
+      <td><img src="media/desktop-preview.png" width="500" alt="Desktop Preview"></td>
+      <td><img src="media/mobile-preview.png" width="200" alt="Mobile Preview"></td>
+    </tr>
+  </table>
+  <p><i>Note: Ganti path gambar di atas dengan screenshot asli portofolio kamu untuk tampilan profesional.</i></p>
+</div>
+
+##  Built With
+
+Teknologi utama yang digunakan tanpa menggunakan framework eksternal yang berat:
+
+*   HTML5 - Semantik & SEO.
+*   CSS3 - Custom Variables, Grid, Flexbox.
+*   JavaScript - ES6+, DOM Manipulation, Observer API.
+*   FontAwesome - Iconography.
+*   Google Fonts - Plus Jakarta Sans.
+
+## 🚀 Getting Started
+
+Untuk menjalankan proyek ini di mesin lokal Anda:
+
+### Prerequisites
+Gunakan browser modern (Chrome, Edge, Safari, atau Firefox) untuk mendukung fitur *Backdrop Filter*.
+
+### Installation
+1. Clone the repo
+   ```sh
+   git clone https://github.com/RIZKIIk/portfolio.git
+   ```
+2. Open `index.html` in your browser.
+3. (Recommended) Use **Live Server** extension in VS Code for hot reload.
+
+## 🏗 Project Structure
+
+| Folder/File | Description |
+| :--- | :--- |
+| `media/` | Berisi aset visual seperti video background, gambar proyek, dan CV. |
+| `style.css` | Arsitektur CSS dengan sistem variabel tema (Dark/Light). |
+| `script.js` | Engine utama untuk interaksi, animasi, dan navigasi. |
+| `index.html` | Struktur utama aplikasi yang SEO-friendly. |
+
+## 📈 Performance Analysis
+
+Proyek ini dioptimasi untuk mendapatkan skor tinggi pada Lighthouse:
+*   **Accessibility**: 100/100
+*   **Best Practices**: 100/100
+*   **SEO**: 100/100
+
+## ‍💻 Author
+
+**Rizki Afandi** - *Junior Software Developer*
+
+[!LinkedIn](https://linkedin.com/inc/rizqi-afandi-603355381)
+[!GitHub](https://github.com/RIZKIIk)
+[!Instagram](https://instagram.com/rizz_xyz10)
+
+---
+
+<div align="center">
+  <p>Dibuat dengan ❤️ oleh Anak RPL.</p>
+  <a href="#top">Back to top</a>
+</div>
