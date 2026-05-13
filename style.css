@@ -135,6 +135,7 @@ body {
 }
 .logo span { 
     background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
