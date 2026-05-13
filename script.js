@@ -198,27 +198,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // 10. Logika Formulir Kontak (Kirim ke WhatsApp)
     const contactForm = document.getElementById('contact-form');
     const formStatus = document.getElementById('form-status');
+    const formBtn = document.getElementById('form-submit');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const data = new FormData(contactForm);
             
-            // Mengambil data dari input
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+            // Tampilkan status loading
+            formBtn.disabled = true;
+            formBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+            formStatus.style.color = 'var(--text-muted)';
+            formStatus.innerText = "Sedang mengirim pesan Anda...";
 
-            // PENTING: Ganti nomor di bawah ini dengan nomor WhatsApp Anda (gunakan kode negara, misal: 62)
-            const myPhoneNumber = "6285649507734"; // Ganti dengan nomor asli Anda
-            const waMessage = `Halo Rizki Afandi!\n\nNama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`;
-            const whatsappUrl = `https://wa.me/${myPhoneNumber}?text=${encodeURIComponent(waMessage)}`;
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: contactForm.method,
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
 
-            // Membuka WhatsApp di tab baru
-            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-            
-            // Simple visual feedback
-            formStatus.style.color = '#10b981';
-            formStatus.innerText = `Mengalihkan ke WhatsApp... Terima kasih, ${name}!`;
+                if (response.ok) {
+                    formStatus.style.color = '#10b981'; // Warna Hijau Sukses
+                    formStatus.innerText = "Terima kasih! Pesan Anda telah terkirim ke email Rizki.";
+                    contactForm.reset();
+                } else {
+                    throw new Error();
+                }
+            } catch (error) {
+                formStatus.style.color = '#ef4444'; // Warna Merah Error
+                formStatus.innerText = "Oops! Terjadi kesalahan. Silakan coba lagi nanti.";
+            } finally {
+                formBtn.disabled = false;
+                formBtn.innerHTML = 'Kirim Pesan';
+            }
         });
     }
 

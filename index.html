@@ -8,7 +8,7 @@
     <!-- Metadata Dasar -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rizki Afandi | Junior Software Developer Portfolio</title>
+    <title>Rizki Afandi Portfolio</title>
     <meta name="description" content="Portfolio Rizki Afandi, Junior Software Developer yang fokus pada pembuatan pengalaman web modern, bersih, dan fungsional.">
     <meta name="keywords" content="Rizki Afandi, Software Developer, Web Design, Portfolio, Rekayasa Perangkat Lunak, Frontend Developer">
     <meta name="author" content="Rizki Afandi">
@@ -269,18 +269,18 @@
     <section id="contact" class="section">
         <div class="container">
             <h2 class="section-title reveal-left">Mari Berdiskusi</h2>
-            <form id="contact-form" class="contact-form reveal-bottom">
+            <form id="contact-form" action="https://formspree.io/f/maqvkajn" method="POST" class="contact-form reveal-bottom">
                 <div class="form-group">
-                    <input type="text" id="name" placeholder="Nama Lengkap" required>
+                    <input type="text" id="name" name="name" placeholder="Nama Lengkap" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" id="email" placeholder="Email Anda" required>
+                    <input type="email" id="email" name="email" placeholder="Email Anda" required>
                 </div>
                 <div class="form-group">
-                    <textarea id="message" rows="5" placeholder="Pesan Anda" required></textarea>
+                    <textarea id="message" name="message" rows="5" placeholder="Pesan Anda" required></textarea>
                 </div>
-                <button type="submit" class="btn">Kirim Pesan</button>
-                <div id="form-status" style="margin-top: 1rem; font-weight: 500;"></div>
+                <button type="submit" id="form-submit" class="btn">Kirim Pesan</button>
+                <div id="form-status" style="margin-top: 1.5rem; font-weight: 600; font-size: 0.9rem; transition: var(--transition);"></div>
             </form>
         </div>
     </section>
