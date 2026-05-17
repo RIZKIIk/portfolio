@@ -3,18 +3,19 @@
 /* ============================================================================ */
 :root {
     /* Dark Mode (Default) */
-    --bg-dark: #050810;
-    --bg-alt: rgba(15, 23, 42, 0.45); 
-    --section-bg: rgba(5, 8, 16, 0.25); 
-    --accent: #6366f1; /* Indigo modern */
-    --text-main: #ffffff; /* Warna teks utama */
-    --text-muted: #cbd5e1; /* Warna teks sekunder (lebih terang untuk keterbacaan) */
-    --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); /* Bayangan kartu lebih dalam */
+    --bg-dark: #020617; /* Lebih dalam dan mewah */
+    --bg-alt: rgba(15, 23, 42, 0.4); 
+    --section-bg: transparent; 
+    --accent: #818cf8; /* Indigo yang lebih lembut */
+    --accent-glow: rgba(129, 140, 248, 0.2);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     --nav-bg: rgba(15, 23, 42, 0.8);
-    --video-overlay-color: rgba(5, 8, 16, 0.4);
-    --accent-glow: rgba(99, 102, 241, 0.3);
+    --video-overlay-color: rgba(2, 6, 23, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
     /* Transisi umum untuk hover/focus */
-    --transition: all 0.3s ease;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     /* Transisi khusus untuk perubahan tema (background, color, backdrop-filter) */
     --theme-transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
 }
@@ -98,7 +99,7 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom, transparent 0%, var(--video-overlay-color) 100%);
-    z-index: -1; /* Ensure it's behind content but above video */
+    z-index: -1;
     transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* Only transition background */
 }
 
@@ -116,18 +117,26 @@ body {
 .navbar {
     padding: 1.5rem 0;
     position: fixed;
-    width: 100%;
-    top: 0;
-    background: rgba(15, 23, 42, 0.7);
+    width: 90%;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--nav-bg);
     backdrop-filter: blur(15px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
     z-index: 1000;
+    transition: var(--transition);
 }
 
 /* Gaya navbar saat halaman di-scroll ke bawah */
 .navbar.scrolled {
-    padding: 1rem 0;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 0.8rem 0;
+    width: 100%;
+    top: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(15, 23, 42, 0.9);
 }
 
 .navbar .container {
@@ -141,7 +150,7 @@ body {
     font-size: 1.7rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: -0.5px;
+    letter-spacing: -1px;
     color: var(--text-main);
     text-decoration: none;
     transition: var(--transition);
@@ -236,12 +245,12 @@ button:focus-visible {
 /* Bagian pembuka halaman dengan perkenalan dan gambar profil */
 /* ============================================================================ */
 .hero {
-    min-height: 100vh;
+    min-height: 110vh; /* Memberi ruang lebih di bawah navbar melayang */
     display: flex;
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    padding: 100px 0;
+    padding: 150px 0 100px;
     position: relative;
 }
 
@@ -259,11 +268,11 @@ button:focus-visible {
 /* Gaya wrapper teks hero dengan latar belakang blur dan bayangan */
 .hero-text-wrapper {
     background: var(--bg-alt);
-    padding: 3.5rem;
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4rem;
+    border-radius: 40px;
+    border: 1px solid var(--glass-border);
     backdrop-filter: blur(20px) saturate(160%);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    box-shadow: var(--card-shadow), inset 0 0 20px rgba(255, 255, 255, 0.02);
     transition: var(--theme-transition);
 }
 /* Penyesuaian shadow untuk light mode */
@@ -276,9 +285,9 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
     height: 380px;
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     overflow: hidden;
-    border: 8px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
     animation: morph 8s ease-in-out infinite, floating 4s ease-in-out infinite;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 50px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--accent-glow);
 }
 
 /* Gambar di dalam bingkai foto */
@@ -306,13 +315,13 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
 
 /* Gaya nama yang diketik */
 .hero-name { 
-    font-size: 4.5rem; 
+    font-size: 5rem; 
     margin: 0.5rem 0; 
     font-weight: 800;
-    letter-spacing: -2px;
+    letter-spacing: -3px;
     min-height: 1.2em;
     /* Efek teks gradien */
-    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -334,8 +343,9 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
 .hero .description { 
     max-width: 500px; 
     color: var(--text-muted); 
-    font-size: 1.2rem; 
+    font-size: 1.1rem; 
     margin-bottom: 2rem;
+    font-weight: 400;
 }
 
 .hero span { color: var(--text-main); font-weight: 600; }
@@ -343,12 +353,11 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
 /* Gaya dasar untuk tombol utama (btn) */
 .btn {
     display: inline-block;
-    margin-top: 2rem;
-    padding: 0.8rem 2rem;
+    padding: 1rem 2.5rem;
     background: var(--accent);
     color: var(--bg-dark);
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: 50px; /* Lebih modern dengan pill shape */
     font-weight: 600;
     transition: var(--transition);
     border: 1px solid transparent;
@@ -391,7 +400,7 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
 /* Gaya umum yang diterapkan pada semua bagian (section) halaman */
 /* ============================================================================ */
 .section { 
-    padding: 100px 0; 
+    padding: 120px 0; 
     background: var(--section-bg); /* Latar belakang solid untuk section */
     position: relative;
     z-index: 1; /* Memastikan konten section di atas video overlay */
@@ -399,8 +408,10 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
 
 /* Gaya untuk judul setiap section */
 .section-title { 
-    font-size: 2rem; 
-    margin-bottom: 3rem; 
+    font-size: 2.5rem; 
+    margin-bottom: 4rem; 
+    font-weight: 800;
+    letter-spacing: -1px;
     position: relative; 
 }
 .section-title::after { /* Garis bawah pada judul section */
@@ -417,7 +428,8 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
     color: var(--text-muted); 
     background: var(--bg-alt);
     padding: 2rem;
-    border-radius: 15px;
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
 }
 
 /* Gaya untuk informasi tambahan (lokasi, pendidikan) di about section */
@@ -426,7 +438,7 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
     gap: 2rem;
     margin-top: 1.5rem;
     font-size: 0.95rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid var(--glass-border);
     padding-top: 1rem;
 }
 
@@ -447,7 +459,7 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
     padding: 1.5rem;
     border-radius: 20px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
     box-shadow: var(--card-shadow);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
     cursor: pointer;
@@ -458,7 +470,7 @@ body.light-mode .hero-text-wrapper { border: 1px solid rgba(0, 0, 0, 0.05); }
 /* Efek hover yang menarik pada kartu skill */
 .skill-card:hover {
     transform: translateY(-10px) scale(1.05);
-    border-color: var(--accent);
+    border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 15px 30px var(--accent-glow);
 }
 
