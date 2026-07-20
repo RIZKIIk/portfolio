@@ -63,7 +63,7 @@ Proyek ini dioptimasi untuk mendapatkan skor tinggi pada Lighthouse:
 
 **Rizki Afandi** - *Junior Software Developer*
 
-[!LinkedIn](https://linkedin.com/inc/rizqi-afandi-603355381)
+[!LinkedIn](https://linkedin.com/in/rizqi-afandi-603355381)
 [!GitHub](https://github.com/RIZKIIk)
 [!Instagram](https://instagram.com/rizz_xyz10)
 

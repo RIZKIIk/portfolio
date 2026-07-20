@@ -356,6 +356,16 @@
       font-size: 14px;
       line-height: 1.55;
       color: rgba(255, 255, 255, 0.92);
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+      border-radius: 18px;
+      padding: 10px 12px;
+    }
+
+    .contact-item:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
     }
 
     .contact-item i {
@@ -671,6 +681,16 @@
       font-size: 18px;
     }
 
+    .theme-icon {
+      font-size: 14px;
+      transition: opacity 0.25s ease;
+      opacity: 0.5;
+    }
+
+    .theme-icon.active {
+      opacity: 1;
+    }
+
     .service-title {
       font-size: 15px;
       font-weight: 900;
@@ -824,19 +844,19 @@
 
       <!-- Toggle tema yang tersimpan di localStorage -->
       <div class="toggle-wrap">
-        <i class="fas fa-sun"></i>
+        <i class="fas fa-sun theme-icon theme-icon-sun"></i>
         <label class="switch" aria-label="Toggle dark mode">
-          <input id="themeToggle" type="checkbox" />
+          <input id="themeToggle" type="checkbox" aria-checked="false" />
           <span class="slider"></span>
         </label>
-        <i class="fas fa-moon"></i>
+        <i class="fas fa-moon theme-icon theme-icon-moon"></i>
       </div>
     </div>
 
     <main class="cv-page" id="main-content">
       <!-- Sidebar: identitas, kontak, skill, bahasa, dan minat -->
       <aside class="sidebar fade-in">
-        <a href="#" class="brand">Rizz<span>Dev</span></a>
+<a href="../index.html" class="brand">Rizz<span>Dev</span></a>
 
         <div class="profile">
           <img src="me.jpg" alt="Foto Rizki Afandi" class="profile-img" />
@@ -849,10 +869,11 @@
 
         <div class="sidebar-title">Kontak</div>
         <div class="contact-list">
-          <div class="contact-item"><i class="fas fa-envelope"></i><span>diazggs321@gmail.com</span></div>
-          <div class="contact-item"><i class="fas fa-phone"></i><span>+62 856 4950 7734</span></div>
+          <a class="contact-item" href="mailto:diazggs321@gmail.com"><i class="fas fa-envelope"></i><span>diazggs321@gmail.com</span></a>
+          <a class="contact-item" href="tel:+6285649507734"><i class="fas fa-phone"></i><span>+62 856 4950 7734</span></a>
           <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>Indonesia</span></div>
-          <div class="contact-item"><i class="fab fa-github"></i><span>github.com/RIZKIIk</span></div>
+          <a class="contact-item" href="https://github.com/RIZKIIk" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i><span>github.com/RIZKIIk</span></a>
+          <a class="contact-item" href="https://linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i><span>linkedin.com/in/rizqi-afandi-603355381</span></a>
         </div>
 
         <div class="sidebar-title">Skills</div>
@@ -870,7 +891,7 @@
           <div class="skill-track"><div class="skill-fill" style="width:75%"></div></div>
         </div>
         <div class="skill-item skills-block">
-          <div class="skill-top"><span>Python</span><span>70%</span></div>
+          <div class="skill-top"><span>Python</span><span>90%</span></div>
           <div class="skill-track"><div class="skill-fill" style="width:90%"></div></div>
         </div>
         <div class="skill-item skills-block">
@@ -1050,13 +1071,30 @@
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 
+    const themeIconSun = document.querySelector('.theme-icon-sun');
+    const themeIconMoon = document.querySelector('.theme-icon-moon');
+
+    const updateThemeIcons = (theme) => {
+      if (theme === 'dark') {
+        themeIconMoon?.classList.add('active');
+        themeIconSun?.classList.remove('active');
+        themeToggle.setAttribute('aria-checked', 'true');
+      } else {
+        themeIconSun?.classList.add('active');
+        themeIconMoon?.classList.remove('active');
+        themeToggle.setAttribute('aria-checked', 'false');
+      }
+    };
+
     html.setAttribute('data-theme', initialTheme);
     themeToggle.checked = initialTheme === 'dark';
+    updateThemeIcons(initialTheme);
 
     themeToggle.addEventListener('change', () => {
       const nextTheme = themeToggle.checked ? 'dark' : 'light';
       html.setAttribute('data-theme', nextTheme);
       localStorage.setItem(storageKey, nextTheme);
+      updateThemeIcons(nextTheme);
     });
 
     // =========================================================

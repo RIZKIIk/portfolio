@@ -24,32 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Kontrol Video Latar Belakang & Tombol Mute
     const bgVideo = document.getElementById('bgVideo');
     const muteToggle = document.getElementById('mute-toggle');
-    const muteIcon = muteToggle.querySelector('i');
+    const muteIcon = muteToggle ? muteToggle.querySelector('i') : null;
 
-    // Inisialisasi ikon mute berdasarkan status muted video saat ini
-    // Jika video tidak muted secara default (misal, browser mengizinkan autoplay dengan suara)
-    if (!bgVideo.muted) {
-        muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
-        // Mencoba memutar video dengan suara jika tidak muted.
-        // Perlu diingat, banyak browser memblokir autoplay dengan suara tanpa interaksi pengguna.
-        // Pengguna mungkin perlu berinteraksi dengan halaman (misal: klik) agar suara bisa diputar.
-        // Error ini normal jika browser memblokir autoplay.
-        bgVideo.play().catch(error => console.warn("Autoplay with sound blocked or failed:", error));
-    }
-
-    // Event listener untuk tombol mute/unmute
-    muteToggle.addEventListener('click', () => {
-        bgVideo.muted = !bgVideo.muted;
-        if (bgVideo.muted) {
-            // Jika dimatikan, ganti ikon ke volume-mute
-            muteIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
-        } else {
-            // Jika dihidupkan, ganti ikon ke volume-up dan coba putar video
+    if (bgVideo && muteToggle && muteIcon) {
+        // Inisialisasi ikon mute berdasarkan status muted video saat ini
+        if (!bgVideo.muted) {
             muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
-            // Memastikan video diputar jika sebelumnya di-pause atau di-mute
-            bgVideo.play().catch(error => console.warn("Failed to play video after unmute:", error));
+            bgVideo.play().catch(error => console.warn("Autoplay with sound blocked or failed:", error));
         }
-    });
+
+        // Event listener untuk tombol mute/unmute
+        muteToggle.addEventListener('click', () => {
+            bgVideo.muted = !bgVideo.muted;
+            if (bgVideo.muted) {
+                muteIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
+            } else {
+                muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
+                bgVideo.play().catch(error => console.warn("Failed to play video after unmute:", error));
+            }
+        });
+    }
 
     // 3. Efek Ripple (Riak) Saat Klik
     document.addEventListener('click', (e) => {
@@ -65,26 +59,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
-    // Toggle menu navigasi mobile saat tombol diklik
-    menuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = menuToggle.querySelector('i');
-        // Mengganti ikon hamburger dengan ikon 'X' dan sebaliknya
-        icon.classList.toggle('fa-bars');
-        icon.classList.toggle('fa-times');
-    });
-
-    // Menutup menu navigasi mobile saat salah satu link di dalamnya diklik
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active'); // Sembunyikan menu
-            menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars'); // Kembalikan ikon ke hamburger
+    if (menuToggle && navLinks) {
+        // Toggle menu navigasi mobile saat tombol diklik
+        menuToggle.addEventListener('click', () => {
+            const menuOpen = navLinks.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+            menuToggle.setAttribute('aria-expanded', menuOpen ? 'true' : 'false');
         });
-    });
+
+        // Menutup menu navigasi mobile saat salah satu link di dalamnya diklik
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
 
     // Typing Animation
     const typingText = document.getElementById('typing-text');
-    const phrases = ["Rizki Afandi", "Web Developer", "Anak RPL", "UI Designer"];
+    const phrases = ["Rizki Afandi", "Web Developer", "Siswa RPL", "UI Designer"];
     let phraseIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
