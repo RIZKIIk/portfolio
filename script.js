@@ -5,6 +5,8 @@
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // 1. Logika Preloader
     const preloader = document.getElementById('preloader');
     // Event listener untuk menyembunyikan preloader setelah semua konten dimuat
@@ -47,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Efek Ripple (Riak) Saat Klik
     document.addEventListener('click', (e) => {
+        if (prefersReducedMotion) return;
         const ripple = document.createElement('div');
         ripple.className = 'click-ripple';
         ripple.style.left = `${e.clientX}px`;
@@ -123,26 +126,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. Logika Pengganti Tema (Dark/Light Mode)
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
-    const icon = themeToggle.querySelector('i');
+    const icon = themeToggle ? themeToggle.querySelector('i') : null;
 
     // Check for saved theme
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
         body.classList.add('light-mode');
-        icon.classList.replace('fa-moon', 'fa-sun');
+        if (icon) icon.classList.replace('fa-moon', 'fa-sun');
+        if (themeToggle) themeToggle.setAttribute('aria-pressed', 'true');
     }
 
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('light-mode'); // Toggle kelas light-mode pada body
-        
-        if (body.classList.contains('light-mode')) {
-            icon.classList.replace('fa-moon', 'fa-sun');
-            localStorage.setItem('theme', 'light'); // Simpan preferensi tema
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
-            localStorage.setItem('theme', 'dark'); // Simpan preferensi tema
-        }
-    });
+    if (themeToggle && icon) {
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode'); // Toggle kelas light-mode pada body
+            const isLight = body.classList.contains('light-mode');
+
+            if (isLight) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'light'); // Simpan preferensi tema
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'dark'); // Simpan preferensi tema
+            }
+
+            themeToggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        });
+    }
 
     // 8. Animasi Progress Bar Skill
     const skillsSection = document.getElementById('skills');
@@ -269,11 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Navbar & Back to Top visibility
         if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-            backToTop.classList.add('show');
+            if (navbar) navbar.classList.add('scrolled');
+            if (backToTop) backToTop.classList.add('show');
         } else {
-            navbar.classList.remove('scrolled');
-            backToTop.classList.remove('show');
+            if (navbar) navbar.classList.remove('scrolled');
+            if (backToTop) backToTop.classList.remove('show');
         }
     });
 
@@ -289,12 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 13. Smooth Scroll untuk Tombol Back to Top
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: prefersReducedMotion ? 'auto' : 'smooth'
+            });
         });
-    });
+    }
 
     // 14. Dynamic Copyright Year
     const yearElement = document.getElementById('current-year');
