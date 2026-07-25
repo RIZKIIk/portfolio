@@ -128,29 +128,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const icon = themeToggle ? themeToggle.querySelector('i') : null;
 
-    // Check for saved theme
+    const applyTheme = (isLight) => {
+        body.classList.toggle('light-mode', isLight);
+        if (icon) {
+            icon.classList.toggle('fa-sun', isLight);
+            icon.classList.toggle('fa-moon', !isLight);
+        }
+        if (themeToggle) {
+            themeToggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        }
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    };
+
     const savedTheme = localStorage.getItem('theme');
     const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-    if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
-        body.classList.add('light-mode');
-        if (icon) icon.classList.replace('fa-moon', 'fa-sun');
-        if (themeToggle) themeToggle.setAttribute('aria-pressed', 'true');
-    }
+    applyTheme(savedTheme === 'light' || (!savedTheme && prefersLight));
 
     if (themeToggle && icon) {
         themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode'); // Toggle kelas light-mode pada body
-            const isLight = body.classList.contains('light-mode');
-
-            if (isLight) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'light'); // Simpan preferensi tema
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'dark'); // Simpan preferensi tema
-            }
-
-            themeToggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+            const isLight = !body.classList.contains('light-mode');
+            applyTheme(isLight);
         });
     }
 
