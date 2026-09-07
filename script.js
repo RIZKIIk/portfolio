@@ -15,6 +15,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    const loadPublishedProjects = async () => {
+        const config = window.PORTFOLIO_CONFIG || {};
+        if (!window.supabase || !config.supabaseUrl || !config.supabaseAnonKey) return;
+
+        const { data, error } = await window.supabase
+            .createClient(config.supabaseUrl, config.supabaseAnonKey)
+            .from('projects')
+            .select('title, description, image_url, tech_stack, demo_url, github_url')
+            .eq('published', true)
+            .order('created_at', { ascending: false });
+
+        if (error || !data?.length) return;
+
+        const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[character]));
+        const projectGrid = document.querySelector('.projects-grid');
+        if (!projectGrid) return;
+
+        projectGrid.innerHTML = data.map((project) => {
+            const tags = (project.tech_stack || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('');
+            const demoLink = project.demo_url ? `<a href="${escapeHtml(project.demo_url)}" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a>` : '';
+            const githubLink = project.github_url ? `<a href="${escapeHtml(project.github_url)}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-project-source">Source Code</a>` : '';
+            return `<article class="project-card reveal-bottom active"><div class="project-img"><img src="${escapeHtml(project.image_url)}" alt="${escapeHtml(project.title)}" loading="lazy" data-fallback="media/foto.jpg"></div><div class="project-info"><h3>${escapeHtml(project.title)}</h3><p>${escapeHtml(project.description)}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div></article>`;
+        }).join('');
+
+        projectGrid.querySelectorAll('img[data-fallback]').forEach((image) => {
+            image.addEventListener('error', () => {
+                if (image.dataset.fallbackApplied) return;
+                image.dataset.fallbackApplied = 'true';
+                image.src = image.dataset.fallback;
+            });
+        });
+    };
+
+    loadPublishedProjects();
+
     // 1. Logika Preloader
     const preloader = document.getElementById('preloader');
     // Event listener untuk menyembunyikan preloader setelah semua konten dimuat

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard admin project portfolio Rizki Afandi.">
+  <title>Admin Project | RizzDev</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-overrides.css">
+  <link rel="stylesheet" href="admin-recovery.css">
+  <link rel="stylesheet" href="admin-polish.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../portfolio-config.js"></script>
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="setup-notice" class="notice" hidden>
+      <strong>Supabase belum dikonfigurasi.</strong>
+      <p>Isi <code>supabaseUrl</code> dan <code>supabaseAnonKey</code> di <code>portfolio-config.js</code>, lalu jalankan schema dari README admin.</p>
+    </section>
+
+    <section id="auth-view" class="auth-card" hidden>
+      <p class="eyebrow">RizzDev Admin</p>
+      <h1>Kelola project portfolio</h1>
+      <p class="muted">Masuk untuk menambah, mengedit, atau menyembunyikan project tanpa menyentuh HTML.</p>
+      <form id="login-form" class="stack-form">
+        <label>Email<input id="login-email" type="email" autocomplete="email" required></label>
+        <label>Password<div class="password-field"><input id="login-password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-target="login-password" aria-label="Tampilkan password"><span aria-hidden="true">◉</span></button></div></label>
+        <button class="button button-primary" type="submit">Masuk</button>
+        <button id="forgot-password-button" class="text-button" type="button">Lupa password?</button>
+      </form>
+      <p id="auth-status" class="status" aria-live="polite"></p>
+
+      <form id="forgot-password-form" class="stack-form recovery-form" hidden>
+        <h2>Reset password</h2>
+        <p class="muted">Masukkan email admin. Link reset akan dikirim ke email tersebut.</p>
+        <label>Email admin<input id="recovery-email" type="email" autocomplete="email" required></label>
+        <button class="button button-primary" type="submit">Kirim link reset</button>
+        <button id="back-to-login" class="text-button" type="button">Kembali ke login</button>
+        <p id="recovery-status" class="status" aria-live="polite"></p>
+      </form>
+
+      <form id="recovery-update-form" class="stack-form recovery-form" hidden>
+        <h2>Buat password baru</h2>
+        <p class="muted">Gunakan minimal 8 karakter.</p>
+        <label>Password baru<div class="password-field"><input id="recovery-password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-target="recovery-password" aria-label="Tampilkan password"><span aria-hidden="true">◉</span></button></div></label>
+        <label>Ulangi password<div class="password-field"><input id="recovery-confirm-password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-target="recovery-confirm-password" aria-label="Tampilkan password"><span aria-hidden="true">◉</span></button></div></label>
+        <button class="button button-primary" type="submit">Simpan password baru</button>
+        <p id="recovery-update-status" class="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="dashboard-view" hidden>
+      <header class="dashboard-header">
+        <div><p class="eyebrow">RizzDev Admin</p><h1>Project portfolio</h1><p class="muted">Project published akan tampil otomatis di halaman utama.</p></div>
+        <div class="header-actions"><button id="change-password-button" class="button button-secondary" type="button">Ubah password</button><button id="logout-button" class="button button-secondary" type="button">Keluar</button></div>
+      </header>
+
+      <section id="password-panel" class="panel password-panel" hidden>
+        <div class="panel-heading"><div><h2>Ubah password</h2><p class="muted">Gunakan password minimal 8 karakter.</p></div><button id="cancel-password" class="text-button" type="button">Tutup</button></div>
+        <form id="password-form" class="password-form">
+          <label>Password baru<div class="password-field"><input id="new-password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-target="new-password" aria-label="Tampilkan password"><span aria-hidden="true">◉</span></button></div></label>
+          <label>Ulangi password<div class="password-field"><input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-target="confirm-password" aria-label="Tampilkan password"><span aria-hidden="true">◉</span></button></div></label>
+          <button class="button button-primary" type="submit">Simpan password</button>
+          <p id="password-status" class="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-heading"><div><h2 id="form-title">Tambah project</h2><p class="muted">Demo dan GitHub bersifat opsional.</p></div><button id="cancel-edit" class="text-button" type="button" hidden>Batal edit</button></div>
+          <form id="project-form" class="stack-form">
+            <input id="project-id" type="hidden">
+            <label>Nama project<input id="project-title" type="text" placeholder="Contoh: SakuTracker" required></label>
+            <label>Deskripsi<textarea id="project-description" rows="4" placeholder="Apa yang project ini selesaikan?" required></textarea></label>
+            <label>URL gambar<input id="project-image" type="url" placeholder="https://..." required></label>
+            <label>Teknologi <span class="label-hint">pisahkan dengan koma</span><input id="project-tech" type="text" placeholder="HTML, CSS, JavaScript" required></label>
+            <label>URL demo <span class="label-hint">opsional</span><input id="project-demo" type="url" placeholder="https://..." ></label>
+            <label>URL GitHub <span class="label-hint">opsional</span><input id="project-github" type="url" placeholder="https://github.com/..." ></label>
+            <label class="check-row"><input id="project-published" type="checkbox" checked> Tampilkan di portfolio</label>
+            <button class="button button-primary" type="submit"><span id="submit-label">Simpan project</span></button>
+            <p id="form-status" class="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Daftar project</h2><p class="muted">Kelola project yang sudah tersimpan.</p></div><div class="panel-actions"><button id="import-legacy-projects" class="text-button" type="button">Import project lama</button><button id="refresh-projects" class="text-button" type="button">Refresh</button></div></div>
+          <div class="project-filters"><input id="project-search" type="search" placeholder="Cari nama atau teknologi..." aria-label="Cari project"><select id="project-filter" aria-label="Filter status project"><option value="all">Semua status</option><option value="published">Published</option><option value="draft">Draft</option></select></div>
+          <div id="project-list" class="project-list" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <section class="panel preview-panel"><div class="panel-heading"><div><h2>Preview project</h2><p class="muted">Lihat bentuk kartu sebelum menyimpan.</p></div></div><article id="project-preview" class="project-preview"><div class="preview-media"></div><div class="preview-content"><span class="eyebrow">Preview</span><h3>Nama project Anda</h3><p>Isi form untuk melihat preview project.</p><div class="chips"></div></div></article></section>
+    </section>
+  </main>
+</body>
+</html>

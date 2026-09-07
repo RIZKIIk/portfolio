@@ -833,6 +833,8 @@ body.light-mode .hero-text-wrapper { border-color: var(--glass-border); }
     color: var(--bg-dark);
     border-color: transparent;
 }
+.project-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: auto; }
+.btn-project-source { border-color: var(--glass-border); color: var(--text-muted); }
 
 /* =====================================
    Contact Form
