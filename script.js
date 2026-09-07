@@ -7,6 +7,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    document.querySelectorAll('img[data-fallback]').forEach((image) => {
+        image.addEventListener('error', () => {
+            if (image.dataset.fallbackApplied) return;
+            image.dataset.fallbackApplied = 'true';
+            image.src = image.dataset.fallback;
+        });
+    });
+
     // 1. Logika Preloader
     const preloader = document.getElementById('preloader');
     // Event listener untuk menyembunyikan preloader setelah semua konten dimuat
@@ -15,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Safety fallback: Sembunyikan preloader setelah 5 detik jika 'load' event tidak terpicu
-    setTimeout(hidePreloader, 5000);
+    setTimeout(hidePreloader, 1500);
 
     function hidePreloader() {
         if (!preloader) return;
@@ -27,6 +35,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgVideo = document.getElementById('bgVideo');
     const muteToggle = document.getElementById('mute-toggle');
     const muteIcon = muteToggle ? muteToggle.querySelector('i') : null;
+    const backgroundContainer = document.querySelector('.video-bg-container');
+    const backgroundToggle = document.getElementById('background-toggle');
+    const backgroundIcon = backgroundToggle ? backgroundToggle.querySelector('i') : null;
+    const backgroundStorageKey = 'portfolio-background';
+
+    const applyBackground = (background) => {
+        const useImage = background === 'image';
+        backgroundContainer?.classList.toggle('image-mode', useImage);
+        if (backgroundIcon) {
+            backgroundIcon.classList.toggle('fa-image', !useImage);
+            backgroundIcon.classList.toggle('fa-video', useImage);
+        }
+        if (backgroundToggle) {
+            backgroundToggle.setAttribute('aria-label', useImage ? 'Gunakan background video' : 'Gunakan background gambar');
+            backgroundToggle.setAttribute('aria-pressed', String(useImage));
+        }
+        if (bgVideo) {
+            if (useImage) {
+                bgVideo.pause();
+            } else {
+                bgVideo.play().catch(() => {});
+            }
+        }
+        localStorage.setItem(backgroundStorageKey, background);
+    };
+
+    applyBackground(localStorage.getItem(backgroundStorageKey) === 'image' ? 'image' : 'video');
+
+    backgroundToggle?.addEventListener('click', () => {
+        const nextBackground = backgroundContainer?.classList.contains('image-mode') ? 'video' : 'image';
+        applyBackground(nextBackground);
+    });
 
     if (bgVideo && muteToggle && muteIcon) {
         // Inisialisasi ikon mute berdasarkan status muted video saat ini
@@ -90,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDeleting = false;
 
     function typeEffect() {
+        if (!typingText) return;
         const currentPhrase = phrases[phraseIndex];
         
         if (isDeleting) {
@@ -113,7 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(typeEffect, typingSpeed);
     }
-    setTimeout(typeEffect, 1000); // Mulai animasi setelah 1 detik
+    if (typingText && !prefersReducedMotion) {
+        setTimeout(typeEffect, 1000); // Mulai animasi setelah 1 detik
+    } else if (typingText) {
+        typingText.textContent = phrases[0];
+    }
 
     // 6. Pemicu Animasi Awal (Hero Section)
     const revealsInitial = document.querySelectorAll('.hero .reveal-top, .hero .reveal-bottom, .hero .reveal-left, .hero .reveal-right');
@@ -199,47 +244,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
     reveals.forEach(el => revealObserver.observe(el)); // Mulai mengamati semua elemen reveal
 
-    // 10. Logika Formulir Kontak (Kirim ke WhatsApp)
+    // 10. Kirim pesan kontak langsung ke WhatsApp
     const contactForm = document.getElementById('contact-form');
     const formStatus = document.getElementById('form-status');
     const formBtn = document.getElementById('form-submit');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', async (e) => {
+        contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const data = new FormData(contactForm);
-            
-            // Tampilkan status loading
-            formBtn.disabled = true;
-            formBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-            formStatus.style.color = 'var(--text-muted)';
-            formStatus.innerText = "Sedang mengirim pesan Anda...";
 
-            try {
-                const response = await fetch(contactForm.action, {
-                    method: contactForm.method,
-                    body: data,
-                    headers: { 'Accept': 'application/json' }
-                });
+            const name = data.get('name').trim();
+            const email = data.get('email').trim();
+            const message = data.get('message').trim();
+            const contactMessage = [
+                'Halo Rizki,',
+                '',
+                'Saya ingin berdiskusi tentang portfolio Anda.',
+                '',
+                '*Data Pengirim*',
+                `Nama: ${name}`,
+                `Email: ${email}`,
+                '',
+                '*Pesan*',
+                message,
+                '',
+                '_Dikirim dari website portfolio Rizki Afandi_'
+            ].join('\n');
 
-                if (response.ok) {
-                    formStatus.style.color = '#10b981'; // Warna Hijau Sukses
-                    formStatus.innerText = "Terima kasih! Pesan Anda telah terkirim ke email Rizki.";
-                    contactForm.reset();
-                } else {
-                    throw new Error();
-                }
-            } catch (error) {
-                formStatus.style.color = '#ef4444'; // Warna Merah Error
-                formStatus.innerText = "Oops! Terjadi kesalahan. Silakan coba lagi nanti.";
-            } finally {
-                formBtn.disabled = false;
-                formBtn.innerHTML = 'Kirim Pesan';
+            const whatsappUrl = `https://wa.me/6285649507734?text=${encodeURIComponent(contactMessage)}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            contactForm.reset();
+            if (formStatus) {
+                formStatus.style.color = '#10b981';
+                formStatus.innerText = 'WhatsApp dibuka dengan pesan yang sudah disiapkan.';
             }
         });
     }
 
-    // 11. ScrollSpy: Highlight active nav link on scroll
+    // 11. Bagikan portfolio atau salin link jika Web Share tidak tersedia
+    const shareButton = document.getElementById('share-portfolio');
+    const shareStatus = document.getElementById('share-status');
+    let shareStatusTimer;
+
+    const showShareStatus = (message) => {
+        if (!shareStatus) return;
+        clearTimeout(shareStatusTimer);
+        shareStatus.textContent = message;
+        shareStatusTimer = setTimeout(() => {
+            shareStatus.textContent = '';
+        }, 3500);
+    };
+
+    if (shareButton) {
+        shareButton.addEventListener('click', async () => {
+            const shareData = {
+                title: 'Rizki Afandi | Portfolio',
+                text: 'Lihat portfolio Rizki Afandi, Junior Software Developer.',
+                url: window.location.href.split('#')[0]
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    showShareStatus('Portfolio siap dibagikan.');
+                } else if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(shareData.url);
+                    showShareStatus('Link portfolio berhasil disalin.');
+                } else {
+                    throw new Error('Share is not supported');
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') showShareStatus('Link belum tersalin. Silakan salin URL halaman ini.');
+            }
+        });
+    }
+
+    // 12. ScrollSpy: Highlight active nav link on scroll
     const navbar = document.querySelector('.navbar');
     const backToTop = document.getElementById('back-to-top');
     const scrollProgress = document.getElementById('scroll-progress');
@@ -289,9 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
     accordionHeaders.forEach(header => {
         header.addEventListener('click', () => {
             const item = header.parentElement;
-            // Optional: Close other items
-            // document.querySelectorAll('.accordion-item').forEach(i => i !== item && i.classList.remove('active'));
-            item.classList.toggle('active');
+            const isOpen = item.classList.toggle('active');
+            header.setAttribute('aria-expanded', String(isOpen));
+            item.querySelector('.accordion-content').setAttribute('aria-hidden', String(!isOpen));
         });
     });
 

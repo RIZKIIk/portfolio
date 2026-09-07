@@ -12,20 +12,40 @@
     <meta name="description" content="Portfolio Rizki Afandi, Junior Software Developer yang fokus pada pembuatan pengalaman web modern, bersih, dan fungsional.">
     <meta name="keywords" content="Rizki Afandi, Software Developer, Web Design, Portfolio, Rekayasa Perangkat Lunak, Frontend Developer">
     <meta name="author" content="Rizki Afandi">
+    <link rel="canonical" href="https://rizz-portfolio.vercel.app/">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "name": "Rizki Afandi Portfolio",
+        "url": "https://rizz-portfolio.vercel.app/",
+        "mainEntity": {
+            "@type": "Person",
+            "name": "Rizki Afandi",
+            "jobTitle": "Junior Software Developer",
+            "url": "https://rizz-portfolio.vercel.app/",
+            "sameAs": [
+                "https://github.com/RIZKIIk",
+                "https://linkedin.com/in/rizqi-afandi-603355381"
+            ]
+        }
+    }
+    </script>
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://portfolio-rizkiik.vercel.app/"> <!-- Ganti dengan domain Anda -->
+    <meta property="og:url" content="https://rizz-portfolio.vercel.app/">
     <meta property="og:title" content="Rizki Afandi | Junior Software Developer Portfolio">
     <meta property="og:description" content="Crafting clean, modern, and functional web experiences.">
-    <meta property="og:image" content="https://portfolio-rizkiik.vercel.app/media/me.jpg"> <!-- Ganti dengan URL absolut gambar Anda -->
+    <meta property="og:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
     <meta name="theme-color" content="#020617">
 
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Rizki Afandi | Junior Software Developer Portfolio">
     <meta name="twitter:description" content="Crafting clean, modern, and functional web experiences.">
-    <meta name="twitter:image" content="https://portfolio-rizkiik.vercel.app/media/me.jpg">
+    <meta name="twitter:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
+    <meta name="twitter:creator" content="@RIZKIIk">
 
     <!-- Favicon -->
     <link rel="icon" href="media/favicon.png" type="image/x-icon">
@@ -58,6 +78,7 @@
         <video autoplay loop playsinline muted poster="media/foto.jpg" preload="auto" class="global-video" id="bgVideo" aria-hidden="true">
             <source src="media/video.mp4" type="video/mp4">
         </video>
+        <img class="background-image" src="media/foto.jpg" alt="">
         <div class="video-overlay"></div>
     </div>
 
@@ -66,7 +87,7 @@
     <!-- Navbar Section -->
     <nav class="navbar">
         <div class="container">
-            <a href="#" class="logo">Rizz<span>Dev</span></a>
+            <a href="#home" class="logo">Rizz<span>Dev</span></a>
             <ul class="nav-links" id="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -91,7 +112,7 @@
     <main>
     <!-- Header / Hero Section -->
     <!-- Bagian pembuka website dengan perkenalan dan foto profil -->
-    <header class="hero">
+    <header id="home" class="hero">
         <div class="container hero-flex">
             <div class="hero-text-wrapper reveal-left">
                 <div class="hero-text">
@@ -114,8 +135,10 @@
                     </div>
                     <div class="hero-btns reveal-bottom">
                         <a href="#projects" class="btn">View Project</a>
-                        <a href="media/cv-template.html" target="_blank" class="btn btn-outline btn-cv" title="Lihat Curriculum Vitae Rizki Afandi"><i class="fas fa-eye"></i> Lihat CV</a>
+                        <a href="cv/cv.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-cv" title="Lihat Curriculum Vitae Rizki Afandi"><i class="fas fa-eye"></i> Lihat CV</a>
+                        <button type="button" id="share-portfolio" class="btn btn-outline" title="Bagikan portfolio"><i class="fas fa-share-nodes" aria-hidden="true"></i> Bagikan</button>
                     </div>
+                    <p id="share-status" class="share-status" aria-live="polite"></p>
                     <div class="hero-socials reveal-bottom">
                         <a href="https://github.com/RIZKIIk" target="_blank" rel="noopener noreferrer" aria-label="GitHub Rizki Afandi" title="GitHub Rizki Afandi"><i class="fab fa-github"></i></a>
                         <a href="https://linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Rizki Afandi" title="LinkedIn Rizki Afandi"><i class="fab fa-linkedin"></i></a>
@@ -207,7 +230,7 @@
                 <!-- Project 1 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500&q=80" alt="Movie Database App" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500&q=80" alt="Movie Database App" loading="lazy" data-fallback="media/foto.jpg">
                     </div>
                     <div class="project-info">
                         <h3>Movie Database App</h3>
@@ -218,13 +241,13 @@
                             <span>Vite</span>
                             <span>TMDB</span>
                         </div>
-                        <a href="https://movie-rizz.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a>
+                        <a href="https://movie-rizz.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-sm" aria-label="Buka demo Movie Database App">Lihat Demo</a>
                     </div>
                 </div>
                 <!-- Project 2 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80" alt="Website Portfolio" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80" alt="Website Portfolio" loading="lazy" data-fallback="media/foto.jpg">
                     </div>
                     <div class="project-info">
                         <h3>Website Portfolio</h3>
@@ -234,13 +257,13 @@
                             <span>Responsive</span>
                             <span>Animation</span>
                         </div>
-                        <a href="index.html" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a> <!-- Ganti dengan URL demo proyek Anda -->
+                        <a href="index.html" target="_blank" rel="noopener noreferrer" class="btn-sm" aria-label="Buka demo Website Portfolio">Lihat Demo</a>
                     </div>
                 </div>
                 <!-- Project 3 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="https://pencatat-keuangan-omega.vercel.app/media/icon.png" alt="Money Tracker" loading="lazy">
+                        <img src="https://pencatat-keuangan-omega.vercel.app/media/icon.png" alt="Money Tracker" loading="lazy" data-fallback="media/foto.jpg">
                     </div>
                     <div class="project-info">
                         <h3>Money Tracker</h3>
@@ -251,7 +274,7 @@
                             <span>CSS</span>
                             <span>JavaScript</span>
                         </div>
-                        <a href="https://pencatat-keuangan-omega.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a> <!-- Ganti dengan URL demo proyek Anda -->
+                        <a href="https://pencatat-keuangan-omega.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-sm" aria-label="Buka demo Money Tracker">Lihat Demo</a>
                     </div>
                 </div>
             </div>
@@ -266,26 +289,26 @@
             <h2 class="section-title reveal-left">Layanan &amp; FAQ</h2>
             <div class="accordion reveal-bottom">
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button">Apa saja layanan yang saya tawarkan? <i class="fas fa-plus"></i></button>
-                    <div class="accordion-content">
+                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-1">Apa saja layanan yang saya tawarkan? <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content" id="faq-answer-1" aria-hidden="true">
                         <p>Saya menawarkan jasa pembuatan website responsif dari nol, desain antarmuka pengguna (UI), dan optimasi performa website untuk pengalaman pengguna yang lebih baik.</p>
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button">Teknologi apa yang saya gunakan? <i class="fas fa-plus"></i></button>
-                    <div class="accordion-content">
+                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-2">Teknologi apa yang saya gunakan? <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content" id="faq-answer-2" aria-hidden="true">
                         <p>Fokus utama saya adalah teknologi web modern seperti HTML5, CSS3 (termasuk Tailwind/Sass), JavaScript modern (ES6+), dan alat kolaborasi seperti Git.</p>
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button">UI/UX Design &amp; Prototyping <i class="fas fa-plus"></i></button>
-                    <div class="accordion-content">
+                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-3">UI/UX Design &amp; Prototyping <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content" id="faq-answer-3" aria-hidden="true">
                         <p>Saya membantu mengubah ide Anda menjadi desain visual yang menarik di Figma, memastikan pengalaman pengguna yang intuitif sebelum masuk ke tahap pengembangan.</p>
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button">Website Maintenance &amp; SEO <i class="fas fa-plus"></i></button>
-                    <div class="accordion-content">
+                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-4">Website Maintenance &amp; SEO <i class="fas fa-plus"></i></button>
+                    <div class="accordion-content" id="faq-answer-4" aria-hidden="true">
                         <p>Layanan pemeliharaan berkala, optimasi kecepatan loading, dan penerapan teknik SEO dasar agar website Anda lebih mudah ditemukan di mesin pencari.</p>
                     </div>
                 </div>
@@ -300,7 +323,7 @@
         <div class="container">
             <h2 class="section-title reveal-left">Mari Berdiskusi</h2>
             <p class="contact-intro reveal-bottom">Saya terbuka untuk proyek, diskusi ide, maupun kesempatan kolaborasi. Jika Anda ingin website yang modern dan fungsional, jangan ragu menghubungi saya.</p>
-            <form id="contact-form" action="https://formspree.io/f/maqvkajn" method="POST" class="contact-form reveal-bottom">
+            <form id="contact-form" class="contact-form reveal-bottom">
                 <div class="form-group">
                     <label class="sr-only" for="name">Nama Lengkap</label>
                     <input type="text" id="name" name="name" placeholder="Nama Lengkap" required>
@@ -332,6 +355,9 @@
         <button id="mute-toggle" class="mute-btn" aria-label="Toggle Mute" type="button">
             <i class="fas fa-volume-mute"></i>
         </button>
+        <button id="background-toggle" class="background-btn" aria-label="Gunakan background gambar" title="Ganti background video atau gambar" type="button">
+            <i class="fas fa-image" aria-hidden="true"></i>
+        </button>
     </div>
 
     <!-- Footer Section -->
@@ -339,7 +365,7 @@
     <!-- Footer Section -->
     <footer>
         <div class="container footer-content">
-            <a href="#" class="logo reveal-top">Rizz<span>Dev</span></a>
+            <a href="#home" class="logo reveal-top">Rizz<span>Dev</span></a>
             <div class="social-links reveal-bottom">
                 <a href="https://github.com/RIZKIIk" target="_blank" rel="noopener noreferrer" aria-label="Github" title="Kunjungi GitHub Saya"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="Kunjungi LinkedIn Saya"><i class="fab fa-linkedin"></i></a>
