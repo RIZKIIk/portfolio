@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typing Animation
     const typingText = document.getElementById('typing-text');
-    const phrases = ["Rizki Afandi", "Web Developer", "Siswa RPL", "UI Designer"];
+    const phrases = ["Rizqi Afandi", "Web Developer", "Siswa RPL", "UI Designer"];
     let phraseIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
