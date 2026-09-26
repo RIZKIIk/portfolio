@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundIcon.classList.toggle('fa-video', useImage);
         }
         if (backgroundToggle) {
-            backgroundToggle.setAttribute('aria-label', useImage ? 'Gunakan background video' : 'Gunakan background gambar');
+            backgroundToggle.setAttribute('aria-label', useImage ? 'Gunakan video latar' : 'Gunakan gambar latar');
             backgroundToggle.setAttribute('aria-pressed', String(useImage));
         }
         if (bgVideo) {
@@ -109,6 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Inisialisasi ikon mute berdasarkan status muted video saat ini
         if (!bgVideo.muted) {
             muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
+            muteToggle.setAttribute('aria-label', 'Matikan suara video');
+            muteToggle.setAttribute('aria-pressed', 'true');
             bgVideo.play().catch(error => console.warn("Autoplay with sound blocked or failed:", error));
         }
 
@@ -117,8 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
             bgVideo.muted = !bgVideo.muted;
             if (bgVideo.muted) {
                 muteIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
+                muteToggle.setAttribute('aria-label', 'Aktifkan suara video');
+                muteToggle.setAttribute('aria-pressed', 'false');
             } else {
                 muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
+                muteToggle.setAttribute('aria-label', 'Matikan suara video');
+                muteToggle.setAttribute('aria-pressed', 'true');
                 bgVideo.play().catch(error => console.warn("Failed to play video after unmute:", error));
             }
         });
@@ -140,22 +146,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
 
     if (menuToggle && navLinks) {
-        // Toggle menu navigasi mobile saat tombol diklik
+        const menuIcon = menuToggle.querySelector('i');
+        const setMenuOpen = (isOpen) => {
+            navLinks.classList.toggle('active', isOpen);
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
+            menuToggle.setAttribute('aria-label', isOpen ? 'Tutup menu' : 'Buka menu');
+            menuIcon?.classList.toggle('fa-bars', !isOpen);
+            menuIcon?.classList.toggle('fa-times', isOpen);
+        };
+
         menuToggle.addEventListener('click', () => {
-            const menuOpen = navLinks.classList.toggle('active');
-            const icon = menuToggle.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
-            menuToggle.setAttribute('aria-expanded', menuOpen ? 'true' : 'false');
+            setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
         });
 
-        // Menutup menu navigasi mobile saat salah satu link di dalamnya diklik
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => setMenuOpen(false));
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && navLinks.classList.contains('active')) {
+                setMenuOpen(false);
+                menuToggle.focus();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (navLinks.classList.contains('active') && !event.target.closest('.navbar')) {
+                setMenuOpen(false);
+            }
         });
     }
 
@@ -218,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (themeToggle) {
             themeToggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+            themeToggle.setAttribute('aria-label', isLight ? 'Ganti ke mode gelap' : 'Ganti ke mode terang');
         }
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
     };
@@ -374,10 +393,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        navItems.forEach((a) => {
-            a.classList.remove("active");
-            if (a.getAttribute("href").includes(current) && current !== "") {
-                a.classList.add("active");
+        navItems.forEach((link) => {
+            const isCurrent = current !== "" && link.getAttribute("href") === `#${current}`;
+            link.classList.toggle("active", isCurrent);
+            if (isCurrent) {
+                link.setAttribute("aria-current", "location");
+            } else {
+                link.removeAttribute("aria-current");
             }
         });
     };
