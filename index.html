@@ -8,7 +8,7 @@
     <!-- Metadata Dasar -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rizki Afandi | Portfolio Web Developer</title>
+    <title>Rizki Afandi | Portofolio Web Developer</title>
     <meta name="description" content="Portfolio Rizki Afandi, juga dikenal sebagai Rizqi Afandi, Junior Software Developer dengan fokus pada web modern, UI/UX, dan frontend development.">
     <meta name="keywords" content="Rizki Afandi, Rizqi Afandi, RizzDev, portfolio web developer, Junior Software Developer, UI/UX">
     <meta name="author" content="Rizki Afandi">
@@ -37,15 +37,15 @@
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://rizz-portfolio.vercel.app/">
-    <meta property="og:title" content="Rizki Afandi | Junior Software Developer Portfolio">
-    <meta property="og:description" content="Crafting clean, modern, and functional web experiences.">
+    <meta property="og:title" content="Rizki Afandi | Portofolio Web Developer">
+    <meta property="og:description" content="Portofolio Rizki Afandi: proyek web, frontend, dan desain UI/UX.">
     <meta property="og:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
-    <meta name="theme-color" content="#020617">
+    <meta name="theme-color" content="#07111a">
 
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Rizki Afandi | Junior Software Developer Portfolio">
-    <meta name="twitter:description" content="Crafting clean, modern, and functional web experiences.">
+    <meta name="twitter:title" content="Rizki Afandi | Portofolio Web Developer">
+    <meta name="twitter:description" content="Portofolio Rizki Afandi: proyek web, frontend, dan desain UI/UX.">
     <meta name="twitter:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
     <meta name="twitter:creator" content="@RIZKIIk">
 
@@ -53,6 +53,7 @@
     <link rel="icon" href="media/favicon.png" type="image/x-icon">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="motion.css">
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,7 +80,7 @@
     <!-- Video Latar Belakang Global -->
     <!-- Video ini hanya dekoratif, tidak memiliki makna konten utama -->
     <div class="video-bg-container" aria-hidden="true">
-        <video autoplay loop playsinline muted poster="media/foto.jpg" preload="auto" class="global-video" id="bgVideo" aria-hidden="true">
+        <video loop playsinline muted poster="media/foto.jpg" preload="none" class="global-video" id="bgVideo" aria-hidden="true">
             <source src="media/video.mp4" type="video/mp4">
         </video>
         <img class="background-image" src="media/foto.jpg" alt="">
@@ -99,7 +100,7 @@
                 <li><a href="#services">Layanan</a></li>
                 <li><a href="#contact">Kontak</a></li>
             </ul>
-            <button id="theme-toggle" class="theme-btn" aria-label="Ganti ke mode terang" type="button" aria-pressed="false">
+            <button id="theme-toggle" class="theme-btn" aria-label="Tema warna" type="button" aria-pressed="false">
                 <i class="fas fa-moon"></i>
             </button>
             <button class="menu-toggle" aria-label="Buka menu" aria-controls="nav-links" aria-expanded="false" type="button">
@@ -120,8 +121,8 @@
         <div class="container hero-flex">
             <div class="hero-text-wrapper reveal-left">
                 <div class="hero-text">
-                    <p class="greeting reveal-top">Halo, saya Rizki Afandi </p>
-                    <h1 class="hero-name"><span id="typing-text" aria-hidden="true"></span><span class="cursor" aria-hidden="true">|</span><span class="sr-only">Rizqi Afandi, Web Developer</span></h1>
+                    <p class="greeting reveal-top">Halo, saya... </p>
+                    <h1 class="hero-name"><span id="typing-text" aria-hidden="true">Rizqi Afandi</span><span class="cursor" aria-hidden="true">|</span><span class="sr-only">Rizqi Afandi, Web Developer</span></h1>
                     <p class="description">Saya membangun pengalaman web yang modern, rapi, dan fokus pada kebutuhan pengguna. Saya juga dikenal sebagai Rizqi Afandi dan RizzDev saat membagikan project frontend serta UI/UX.</p>
                     <div class="hero-highlights reveal-bottom">
                         <div class="stat-card">
@@ -166,12 +167,12 @@
             <h2 class="section-title reveal-left">Tentang Saya</h2>
             <div class="about-content reveal-bottom">
                 <div class="about-text">
-                    <p>Halo! Saya Rizki, siswa SMK jurusan Rekayasa Perangkat Lunak yang passionate dalam pengembangan teknologi dan inovasi digital. Saya memiliki ketertarikan yang luas pada <strong>Software Development</strong>, <strong>UI/UX Design</strong>, dan <strong>Problem Solving</strong>.</p>
-                    <p>Selama masa sekolah, saya telah menyelesaikan berbagai proyek dan tantangan teknis mulai dari algoritma dasar hingga aplikasi yang kompleks. Saya percaya bahwa solusi yang baik dibangun dari fondasi logika yang kuat, desain yang nyaman, dan perhatian terhadap detail pengguna.</p>
+                    <p>Halo! Saya Rizki, siswa SMK jurusan Rekayasa Perangkat Lunak yang antusias mengembangkan teknologi dan inovasi digital. Saya tertarik pada <strong>pengembangan perangkat lunak</strong>, <strong>desain UI/UX</strong>, dan <strong>pemecahan masalah</strong>.</p>
+                    <p>Selama masa sekolah, saya mengerjakan berbagai proyek dan tantangan teknis, dari algoritma dasar hingga aplikasi yang lebih kompleks. Saya percaya solusi yang baik dibangun dengan logika yang kuat, desain yang nyaman, dan perhatian pada kebutuhan pengguna.</p>
                     <div class="about-highlights">
                         <div class="fact-card">
                             <h3>Fokus utama</h3>
-                            <p>Frontend, desain antarmuka, dan pengalaman pengguna yang bersih.</p>
+                            <p>Frontend, desain antarmuka, dan pengalaman pengguna yang mudah dipahami.</p>
                         </div>
                        
                         <div class="fact-card">
@@ -234,11 +235,11 @@
                 <!-- Project 1 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500&q=80" alt="Movie Database App" loading="lazy" data-fallback="media/foto.jpg">
+                        <img src="media/projects/movie-app.svg" alt="Ilustrasi konsep aplikasi katalog film" loading="lazy" decoding="async"><span class="project-visual-note">Ilustrasi konsep</span>
                     </div>
                     <div class="project-info">
                         <h3>Movie Database App</h3>
-                        <p>Website katalog film modern dengan pencarian, filter, detail film, dan tema gelap/terang.</p>
+                        <p>Katalog film dengan fitur pencarian, filter, halaman detail, serta pilihan tema gelap dan terang.</p>
                         <div class="project-tags">
                             <span>React</span>
                             <span>TypeScript</span>
@@ -251,23 +252,23 @@
                 <!-- Project 2 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80" alt="Website Portfolio" loading="lazy" data-fallback="media/foto.jpg">
+                        <img src="media/projects/portfolio.svg" alt="Ilustrasi konsep website portfolio" loading="lazy" decoding="async"><span class="project-visual-note">Ilustrasi konsep</span>
                     </div>
                     <div class="project-info">
                         <h3>Website Portfolio</h3>
                         <p>Desain web responsif modern menggunakan HTML, CSS, dan JS murni.</p>
                         <div class="project-tags">
                             <span>UI/UX</span>
-                            <span>Responsive</span>
-                            <span>Animation</span>
+                            <span>Responsif</span>
+                            <span>Animasi</span>
                         </div>
-                        <div class="project-links"><a href="index.html" class="btn-sm" aria-label="Lihat Website Portfolio">Lihat proyek <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
+                        <div class="project-links"><a href="https://rizz-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-sm" aria-label="Buka demo Website Portfolio">Lihat demo <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
                     </div>
                 </div>
                 <!-- Project 3 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="https://pencatat-keuangan-omega.vercel.app/media/icon.png" alt="Money Tracker" loading="lazy" data-fallback="media/foto.jpg">
+                        <img src="media/projects/money-tracker.svg" alt="Ilustrasi konsep dashboard pencatat keuangan" loading="lazy" decoding="async"><span class="project-visual-note">Ilustrasi konsep</span>
                     </div>
                     <div class="project-info">
                         <h3>Money Tracker</h3>
@@ -305,13 +306,13 @@
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-3">UI/UX Design &amp; Prototyping <i class="fas fa-plus"></i></button>
+                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-3">Desain UI/UX &amp; Prototipe <i class="fas fa-plus"></i></button>
                     <div class="accordion-content" id="faq-answer-3" aria-hidden="true">
                         <p>Saya membantu mengubah ide Anda menjadi desain visual yang menarik di Figma, memastikan pengalaman pengguna yang intuitif sebelum masuk ke tahap pengembangan.</p>
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-4">Website Maintenance &amp; SEO <i class="fas fa-plus"></i></button>
+                    <button class="accordion-header" type="button" aria-expanded="false" aria-controls="faq-answer-4">Perawatan &amp; SEO Website <i class="fas fa-plus"></i></button>
                     <div class="accordion-content" id="faq-answer-4" aria-hidden="true">
                         <p>Layanan pemeliharaan berkala, optimasi kecepatan loading, dan penerapan teknik SEO dasar agar website Anda lebih mudah ditemukan di mesin pencari.</p>
                     </div>
@@ -357,11 +358,11 @@
     <!-- Tombol Mute/Unmute Video -->
     <!-- Mengontrol suara video latar belakang -->
     <div class="video-controls">
-        <button id="mute-toggle" class="mute-btn" aria-label="Aktifkan suara video" aria-pressed="false" type="button">
+        <button id="mute-toggle" class="mute-btn" aria-label="Suara video" aria-pressed="false" type="button">
             <i class="fas fa-volume-mute"></i>
         </button>
-        <button id="background-toggle" class="background-btn" aria-label="Gunakan gambar latar" title="Ganti background video atau gambar" type="button">
-            <i class="fas fa-image" aria-hidden="true"></i>
+        <button id="background-toggle" class="background-btn" aria-label="Gunakan video latar" title="Pilih gambar atau video latar" type="button">
+            <i class="fas fa-video" aria-hidden="true"></i>
         </button>
     </div>
 
@@ -377,12 +378,11 @@
                 <a href="https://instagram.com/rizz_xyz10" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Follow Instagram Saya"><i class="fab fa-instagram"></i></a>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <span id="current-year"></span> Crafted with <i class="fas fa-heart"></i> by Rizz Dev.</p>
+                <p>&copy; <span id="current-year"></span> Dibuat dengan <i class="fas fa-heart" aria-hidden="true"></i> oleh RizzDev.</p>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="portfolio-config.js"></script>
     <script src="script.js"></script>
 </body>

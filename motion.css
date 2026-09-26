@@ -1,0 +1,185 @@
+/* Shared motion language for the portfolio, CV, and admin surfaces. */
+:root {
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fast: 180ms;
+  --motion-base: 280ms;
+  --motion-enter: 620ms;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent, var(--primary, #34d399));
+  outline-offset: 3px;
+}
+
+.navbar,
+.page-shell,
+.admin-shell {
+  animation: motion-enter var(--motion-enter) var(--motion-ease) both;
+}
+
+.btn,
+.btn-sm,
+.hero-socials a,
+.theme-btn,
+.menu-toggle,
+.mute-btn,
+.background-btn,
+#back-to-top,
+.cv-page .btn,
+.theme-control,
+.contact-list a,
+.tag-list span,
+.chip,
+.admin-shell .button,
+.admin-shell .text-button,
+.password-toggle,
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea,
+.project-preview,
+.project-item {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--motion-ease);
+}
+
+.fact-card,
+.stat-card,
+.skill-card,
+.project-card,
+.accordion-item,
+.cv-page .panel,
+.cv-page .stat,
+.cv-page .service-card,
+.admin-shell .panel,
+.auth-card,
+.notice {
+  transition-property: border-color, box-shadow, transform, background-color;
+  transition-duration: var(--motion-base);
+  transition-timing-function: var(--motion-ease);
+}
+
+.nav-links a,
+.side-section a,
+.brand {
+  transition: color var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) var(--motion-ease);
+}
+
+.cv-section-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: -0.4rem 0 1.8rem;
+  color: var(--muted, #94a3b8);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.cv-section-nav a {
+  padding: 0.48rem 0.78rem;
+  border: 1px solid var(--line, rgba(255,255,255,.14));
+  border-radius: 999px;
+  background: var(--surface, rgba(15,23,42,.88));
+  color: var(--text, #f8fafc);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
+}
+
+.cv-section-nav a:hover {
+  border-color: var(--accent, var(--primary, #34d399));
+  color: var(--accent, var(--primary, #34d399));
+}
+
+.cv-page .section-title { scroll-margin-top: 1.25rem; }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .fact-card:hover,
+  .stat-card:hover,
+  .skill-card:hover,
+  .project-card:hover,
+  .accordion-item:hover,
+  .cv-page .stat:hover,
+  .cv-page .service-card:hover,
+  .admin-shell .panel:hover,
+  .project-item:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent, var(--primary, #34d399)) 48%, transparent);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+  }
+
+  .hero-socials a:hover,
+  .contact-list a:hover,
+  .tag-list span:hover {
+    transform: translateY(-2px);
+  }
+
+  .admin-shell .button:hover,
+  .cv-page .btn:hover,
+  .btn:hover,
+  .btn-sm:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+  }
+
+  .project-card:hover .project-img img {
+    transform: scale(1.035);
+  }
+}
+
+@keyframes motion-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .navbar,
+  .page-shell,
+  .admin-shell {
+    animation: none !important;
+  }
+
+  .reveal-top,
+  .reveal-bottom,
+  .reveal-left,
+  .reveal-right {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media print {
+  .cv-section-nav { display: none !important; }
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

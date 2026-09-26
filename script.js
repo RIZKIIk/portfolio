@@ -31,14 +31,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({
             '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
         }[character]));
+        const safeProjectUrl = (value) => {
+            if (!value) return '';
+            try {
+                const url = new URL(String(value), window.location.href);
+                return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+            } catch (error) {
+                return '';
+            }
+        };
         const projectGrid = document.querySelector('.projects-grid');
         if (!projectGrid) return;
 
         projectGrid.innerHTML = data.map((project) => {
-            const tags = (project.tech_stack || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('');
-            const demoLink = project.demo_url ? `<a href="${escapeHtml(project.demo_url)}" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat Demo</a>` : '';
-            const githubLink = project.github_url ? `<a href="${escapeHtml(project.github_url)}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-project-source">Source Code</a>` : '';
-            return `<article class="project-card reveal-bottom active"><div class="project-img"><img src="${escapeHtml(project.image_url)}" alt="${escapeHtml(project.title)}" loading="lazy" data-fallback="media/foto.jpg"></div><div class="project-info"><h3>${escapeHtml(project.title)}</h3><p>${escapeHtml(project.description)}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div></article>`;
+            const title = escapeHtml(project.title || 'Proyek');
+            const description = escapeHtml(project.description || '');
+            const tags = (Array.isArray(project.tech_stack) ? project.tech_stack : [])
+                .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+                .join('');
+            const demoUrl = safeProjectUrl(project.demo_url);
+            const githubUrl = safeProjectUrl(project.github_url);
+            const imageUrl = safeProjectUrl(project.image_url) || 'media/projects/portfolio.svg';
+            const demoLink = demoUrl ? `<a href="${escapeHtml(demoUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat demo <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>` : '';
+            const githubLink = githubUrl ? `<a href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-project-source">Kode sumber <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>` : '';
+            return `<article class="project-card reveal-bottom active"><div class="project-img"><img src="${escapeHtml(imageUrl)}" alt="Ilustrasi ${title}" loading="lazy" decoding="async" data-fallback="media/projects/portfolio.svg"></div><div class="project-info"><h3>${title}</h3><p>${description}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div></article>`;
         }).join('');
 
         projectGrid.querySelectorAll('img[data-fallback]').forEach((image) => {
@@ -50,7 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    loadPublishedProjects();
+    const projectConfig = window.PORTFOLIO_CONFIG || {};
+    if (projectConfig.supabaseUrl && projectConfig.supabaseAnonKey) {
+        if (window.supabase) {
+            loadPublishedProjects();
+        } else {
+            const supabaseLoader = document.createElement('script');
+            supabaseLoader.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+            supabaseLoader.async = true;
+            supabaseLoader.addEventListener('load', loadPublishedProjects, { once: true });
+            document.head.appendChild(supabaseLoader);
+        }
+    }
 
     // 1. Logika Preloader
     const preloader = document.getElementById('preloader');
@@ -86,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (backgroundToggle) {
             backgroundToggle.setAttribute('aria-label', useImage ? 'Gunakan video latar' : 'Gunakan gambar latar');
-            backgroundToggle.setAttribute('aria-pressed', String(useImage));
         }
         if (bgVideo) {
             if (useImage) {
@@ -98,7 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(backgroundStorageKey, background);
     };
 
-    applyBackground(localStorage.getItem(backgroundStorageKey) === 'image' ? 'image' : 'video');
+    const savedBackground = localStorage.getItem(backgroundStorageKey);
+    const initialBackground = !prefersReducedMotion && savedBackground === 'video' ? 'video' : 'image';
+    applyBackground(initialBackground);
 
     backgroundToggle?.addEventListener('click', () => {
         const nextBackground = backgroundContainer?.classList.contains('image-mode') ? 'video' : 'image';
@@ -109,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Inisialisasi ikon mute berdasarkan status muted video saat ini
         if (!bgVideo.muted) {
             muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
-            muteToggle.setAttribute('aria-label', 'Matikan suara video');
+            muteToggle.setAttribute('aria-label', 'Suara video');
             muteToggle.setAttribute('aria-pressed', 'true');
             bgVideo.play().catch(error => console.warn("Autoplay with sound blocked or failed:", error));
         }
@@ -119,11 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
             bgVideo.muted = !bgVideo.muted;
             if (bgVideo.muted) {
                 muteIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
-                muteToggle.setAttribute('aria-label', 'Aktifkan suara video');
+                muteToggle.setAttribute('aria-label', 'Suara video');
                 muteToggle.setAttribute('aria-pressed', 'false');
             } else {
                 muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
-                muteToggle.setAttribute('aria-label', 'Matikan suara video');
+                muteToggle.setAttribute('aria-label', 'Suara video');
                 muteToggle.setAttribute('aria-pressed', 'true');
                 bgVideo.play().catch(error => console.warn("Failed to play video after unmute:", error));
             }
@@ -181,8 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const typingText = document.getElementById('typing-text');
     const phrases = ["Rizqi Afandi", "Web Developer", "Siswa RPL", "UI Designer"];
     let phraseIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
+    let charIndex = phrases[0].length;
+    let isDeleting = true;
 
     function typeEffect() {
         if (!typingText) return;
@@ -201,10 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDeleting && charIndex === currentPhrase.length) {
             isDeleting = true;
             typingSpeed = 2000; // Pause at end
-        } else if (isDeleting && charIndex === 0) { // Jika sudah selesai menghapus
+        } else if (isDeleting && charIndex === 0) { // Pindah langsung agar judul tidak sempat kosong
             isDeleting = false;
-            phraseIndex = (phraseIndex + 1) % phrases.length; // Pindah ke frasa berikutnya
-            typingSpeed = 500; // Jeda sebelum mengetik frasa baru
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            charIndex = 1;
+            typingText.textContent = phrases[phraseIndex].substring(0, charIndex);
+            typingSpeed = 150;
         }
 
         setTimeout(typeEffect, typingSpeed);
@@ -236,8 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (themeToggle) {
             themeToggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
-            themeToggle.setAttribute('aria-label', isLight ? 'Ganti ke mode gelap' : 'Ganti ke mode terang');
+            themeToggle.setAttribute('aria-label', 'Tema warna');
         }
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isLight ? '#f5f8f6' : '#07111a');
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
     };
 
@@ -329,11 +360,31 @@ document.addEventListener('DOMContentLoaded', () => {
             ].join('\n');
 
             const whatsappUrl = `https://wa.me/6285649507734?text=${encodeURIComponent(contactMessage)}`;
-            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-            contactForm.reset();
+            let whatsappTab = null;
+            try {
+                whatsappTab = window.open('about:blank', '_blank');
+                if (whatsappTab) {
+                    whatsappTab.opener = null;
+                    whatsappTab.location.href = whatsappUrl;
+                }
+            } catch (error) {
+                whatsappTab = null;
+            }
+
             if (formStatus) {
-                formStatus.style.color = '#10b981';
-                formStatus.innerText = 'WhatsApp dibuka dengan pesan yang sudah disiapkan.';
+                formStatus.replaceChildren();
+                formStatus.style.color = 'var(--accent-strong)';
+                formStatus.append(document.createTextNode(
+                    whatsappTab
+                        ? 'WhatsApp dibuka di tab baru. Tinjau pesan lalu tekan Kirim. Isian formulir tetap tersimpan. '
+                        : 'Tab WhatsApp diblokir. Isian formulir tetap tersimpan; buka pesan melalui tautan ini: '
+                ));
+                const retryLink = document.createElement('a');
+                retryLink.href = whatsappUrl;
+                retryLink.target = '_blank';
+                retryLink.rel = 'noopener noreferrer';
+                retryLink.textContent = whatsappTab ? 'Buka lagi' : 'Buka WhatsApp';
+                formStatus.append(retryLink);
             }
         });
     }

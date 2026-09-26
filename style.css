@@ -1564,3 +1564,32 @@ footer { border-top: 1px solid var(--glass-border); }
     .skip-link { transition: none; }
     .project-img img { transition: none; }
 }
+
+@media (max-width: 768px) {
+    /* Keep floating media controls out of the way of the hero and contact actions. */
+    .video-controls {
+        position: static;
+        width: max-content;
+        margin: 0 auto 1.25rem;
+        transform: none;
+    }
+}
+
+.project-img { position: relative; }
+.project-visual-note {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    z-index: 1;
+    padding: 0.38rem 0.65rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(7, 17, 26, 0.72);
+    color: #f3f7f6;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.035em;
+    line-height: 1.25;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
