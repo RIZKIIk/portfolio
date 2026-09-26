@@ -1,7 +1,7 @@
 (() => {
   const config = window.PORTFOLIO_CONFIG || {};
   const adminEmail = (config.adminEmail || '').trim().toLowerCase();
-  const hasConfig = Boolean(config.supabaseUrl && config.supabaseAnonKey && window.supabase);
+  const hasConfig = Boolean(config.supabaseUrl && config.supabaseAnonKey && config.adminEmail && window.supabase);
   const setupNotice = document.querySelector('#setup-notice');
   const authView = document.querySelector('#auth-view');
   const dashboardView = document.querySelector('#dashboard-view');
@@ -26,8 +26,23 @@
   const projectSearch = document.querySelector('#project-search');
   const projectFilter = document.querySelector('#project-filter');
   const projectPreview = document.querySelector('#project-preview');
+  const projectImageUrl = document.querySelector('#project-image');
+  const projectImageFile = document.querySelector('#project-image-file');
+  const imageFileName = document.querySelector('#image-file-name');
+  const imageUploadStatus = document.querySelector('#image-upload-status');
+  const previewMedia = document.querySelector('#project-preview .preview-media');
+  const previewStatus = document.querySelector('#preview-status');
+  const previewTitle = document.querySelector('#preview-title');
+  const previewDescription = document.querySelector('#preview-description');
+  const previewChips = document.querySelector('#preview-chips');
+  const previewLinks = document.querySelector('#preview-links');
+  const projectSubmitButton = projectForm.querySelector('[type="submit"]');
+  const storageBucket = 'portfolio-project-images';
+  const maxSourceImageBytes = 6 * 1024 * 1024;
+  const maxStoredImageBytes = 3 * 1024 * 1024;
   let allProjects = [];
   let client;
+  let previewObjectUrl = '';
 
   document.querySelectorAll('.password-toggle').forEach((toggle) => {
     toggle.addEventListener('click', () => {
@@ -51,43 +66,130 @@
     element.dataset.error = String(isError);
   };
 
-  const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
-
   const fields = () => ({
     id: document.querySelector('#project-id').value,
     title: document.querySelector('#project-title').value.trim(),
     description: document.querySelector('#project-description').value.trim(),
-    image_url: document.querySelector('#project-image').value.trim(),
+    image_url: projectImageUrl.value.trim(),
     tech_stack: document.querySelector('#project-tech').value.split(',').map((tag) => tag.trim()).filter(Boolean),
     demo_url: document.querySelector('#project-demo').value.trim() || null,
     github_url: document.querySelector('#project-github').value.trim() || null,
     published: document.querySelector('#project-published').checked
   });
 
-  const isHttpUrl = (value) => {
+  const normalizeHttpUrl = (value) => {
     try {
-      const url = new URL(value);
-      return url.protocol === 'http:' || url.protocol === 'https:';
+      const url = new URL(String(value).trim());
+      if (url.protocol !== 'https:' || url.username || url.password) return '';
+      return url.href;
     } catch {
-      return false;
+      return '';
     }
   };
 
+  const clearSelectedImage = (clearFile = true) => {
+    if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = '';
+    if (clearFile) projectImageFile.value = '';
+    imageFileName.textContent = 'Belum ada gambar dipilih';
+    setStatus(imageUploadStatus, '');
+  };
+
+  const optimizeImage = async (file) => {
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!acceptedTypes.includes(file.type)) throw new Error('Pilih gambar JPG, PNG, atau WebP.');
+    if (file.size > maxSourceImageBytes) throw new Error('Ukuran gambar maksimal 6 MB.');
+    if (!('createImageBitmap' in window)) throw new Error('Browser ini belum mendukung optimasi gambar. Coba browser versi terbaru.');
+
+    const bitmap = await createImageBitmap(file);
+    try {
+      if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 40000000) {
+        throw new Error('Dimensi gambar terlalu besar. Gunakan gambar di bawah 40 megapiksel.');
+      }
+      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Gambar tidak dapat diproses oleh browser.');
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const optimized = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.84));
+      if (!optimized) throw new Error('Gambar gagal dioptimalkan. Coba file gambar lain.');
+      if (optimized.size > maxStoredImageBytes) throw new Error('Hasil gambar masih terlalu besar. Pilih gambar yang lebih kecil.');
+      return optimized;
+    } finally {
+      bitmap.close();
+    }
+  };
+
+  const createStoragePath = () => {
+    if (crypto.randomUUID) return `projects/${crypto.randomUUID()}.webp`;
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    return `projects/${Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')}.webp`;
+  };
+
+  const uploadProjectImage = async (file) => {
+    const image = await optimizeImage(file);
+    const path = createStoragePath();
+    const { error } = await client.storage.from(storageBucket).upload(path, image, {
+      cacheControl: '31536000',
+      contentType: 'image/webp',
+      upsert: false
+    });
+    if (error) {
+      const message = String(error.message || '').toLowerCase();
+      if (message.includes('bucket not found')) {
+        throw new Error('Bucket gambar belum dibuat. Jalankan SQL upload gambar dari admin/README.md.');
+      }
+      if (message.includes('row-level security') || message.includes('policy')) {
+        throw new Error('Upload ditolak oleh policy Storage. Jalankan policy bucket dari admin/README.md.');
+      }
+      throw error;
+    }
+    const { data } = client.storage.from(storageBucket).getPublicUrl(path);
+    return { path, url: data.publicUrl };
+  };
+
+  const managedStoragePath = (imageUrl) => {
+    try {
+      const url = new URL(imageUrl);
+      const supabaseOrigin = new URL(config.supabaseUrl).origin;
+      const prefix = `/storage/v1/object/public/${storageBucket}/`;
+      if (url.origin !== supabaseOrigin || !url.pathname.startsWith(prefix)) return '';
+      const path = decodeURIComponent(url.pathname.slice(prefix.length));
+      return /^projects\/(?:[0-9a-f-]{36}|[0-9a-f]{32})\.webp$/i.test(path) ? path : '';
+    } catch {
+      return '';
+    }
+  };
+
+  const removeManagedImage = async (imageUrl) => {
+    const path = managedStoragePath(imageUrl);
+    if (!path) return;
+    const { error } = await client.storage.from(storageBucket).remove([path]);
+    if (error) console.warn('Gambar lama tidak dapat dihapus dari Storage.');
+  };
+
   const resetForm = () => {
+    clearSelectedImage();
     projectForm.reset();
     document.querySelector('#project-id').value = '';
     document.querySelector('#project-published').checked = true;
-    formTitle.textContent = 'Tambah project';
-    submitLabel.textContent = 'Simpan project';
+    formTitle.textContent = 'Tambah proyek';
+    submitLabel.textContent = 'Simpan proyek';
     cancelEdit.hidden = true;
     setStatus(formStatus, '');
+    updatePreview();
   };
 
   const fillForm = (project) => {
+    clearSelectedImage();
     document.querySelector('#project-id').value = project.id;
     document.querySelector('#project-title').value = project.title;
     document.querySelector('#project-description').value = project.description;
-    document.querySelector('#project-image').value = project.image_url;
+    projectImageUrl.value = project.image_url || '';
     document.querySelector('#project-tech').value = (project.tech_stack || []).join(', ');
     document.querySelector('#project-demo').value = project.demo_url || '';
     document.querySelector('#project-github').value = project.github_url || '';
@@ -99,43 +201,121 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  projectImageFile.addEventListener('change', () => {
+    const file = projectImageFile.files?.[0];
+    clearSelectedImage(false);
+    if (!file) {
+      updatePreview();
+      return;
+    }
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!acceptedTypes.includes(file.type) || file.size > maxSourceImageBytes) {
+      projectImageFile.value = '';
+      setStatus(imageUploadStatus, acceptedTypes.includes(file.type) ? 'Ukuran gambar maksimal 6 MB.' : 'Pilih gambar JPG, PNG, atau WebP.', true);
+      updatePreview();
+      return;
+    }
+    imageFileName.textContent = `${file.name} · ${Math.max(1, Math.round(file.size / 1024))} KB`;
+    previewObjectUrl = URL.createObjectURL(file);
+    setStatus(imageUploadStatus, 'Gambar siap dioptimalkan saat disimpan.');
+    updatePreview();
+  });
+
   const updatePreview = () => {
     const project = fields();
-    const image = isHttpUrl(project.image_url) ? escapeHtml(project.image_url) : '';
-    projectPreview.innerHTML = `<div class="preview-media" style="${image ? `background-image:url('${image}')` : ''}"></div><div class="preview-content"><span class="eyebrow">${project.published ? 'Published' : 'Draft'}</span><h3>${escapeHtml(project.title || 'Nama project Anda')}</h3><p>${escapeHtml(project.description || 'Isi form untuk melihat preview project.')}</p><div class="chips">${project.tech_stack.map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div><div class="preview-links">${project.demo_url ? 'Lihat Demo' : ''}${project.github_url ? 'Source Code' : ''}</div></div>`;
+    const imageUrl = previewObjectUrl || normalizeHttpUrl(project.image_url);
+    previewStatus.textContent = project.published ? 'Akan ditayangkan' : 'Draft';
+    previewTitle.textContent = project.title || 'Nama proyek Anda';
+    previewDescription.textContent = project.description || 'Isi form untuk melihat preview project.';
+    previewMedia.hidden = !imageUrl;
+    previewMedia.referrerPolicy = 'no-referrer';
+    projectPreview.classList.toggle('has-image', Boolean(imageUrl));
+    if (imageUrl && previewMedia.getAttribute('src') !== imageUrl) previewMedia.src = imageUrl;
+    if (!imageUrl) previewMedia.removeAttribute('src');
+    previewChips.replaceChildren(...project.tech_stack.slice(0, 12).map((tag) => {
+      const chip = document.createElement('span');
+      chip.textContent = tag;
+      return chip;
+    }));
+    previewLinks.replaceChildren(...[
+      project.demo_url && normalizeHttpUrl(project.demo_url) ? 'Demo tersedia' : '',
+      project.github_url && normalizeHttpUrl(project.github_url) ? 'GitHub tersedia' : ''
+    ].filter(Boolean).map((label) => {
+      const linkHint = document.createElement('span');
+      linkHint.textContent = label;
+      return linkHint;
+    }));
   };
 
   const filteredProjects = () => {
     const query = projectSearch.value.trim().toLowerCase();
     const status = projectFilter.value;
     return allProjects.filter((project) => {
-      const matchesQuery = !query || project.title.toLowerCase().includes(query) || (project.tech_stack || []).some((tag) => tag.toLowerCase().includes(query));
+      const matchesQuery = !query || String(project.title || '').toLowerCase().includes(query) || (project.tech_stack || []).some((tag) => String(tag).toLowerCase().includes(query));
       const matchesStatus = status === 'all' || (status === 'published' ? project.published : !project.published);
       return matchesQuery && matchesStatus;
     });
   };
 
   const renderProjects = (projects) => {
-    projectList.innerHTML = '';
+    const fragment = document.createDocumentFragment();
     if (!projects.length) {
-      projectList.innerHTML = '<p class="empty-state">Belum ada project. Tambahkan project pertama Anda.</p>';
+      const emptyState = document.createElement('p');
+      emptyState.className = 'empty-state';
+      emptyState.textContent = 'Belum ada project. Tambahkan project pertama Anda.';
+      projectList.replaceChildren(emptyState);
       return;
     }
     projects.forEach((project) => {
       const item = document.createElement('article');
       item.className = 'project-item';
-      item.innerHTML = `
-        <div class="project-item-main">
-          <img src="${escapeHtml(project.image_url)}" alt="" loading="lazy">
-          <div><h3>${escapeHtml(project.title)}</h3><p>${escapeHtml(project.description)}</p><div class="chips">${(project.tech_stack || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div></div>
-        </div>
-        <div class="project-item-actions"><span class="badge ${project.published ? 'badge-live' : ''}">${project.published ? 'Published' : 'Draft'}</span><button class="text-button" data-edit="${project.id}" type="button">Edit</button><button class="danger-button" data-delete="${project.id}" type="button">Hapus</button></div>`;
-      projectList.appendChild(item);
+      const main = document.createElement('div');
+      main.className = 'project-item-main';
+      const image = document.createElement('img');
+      image.alt = '';
+      image.loading = 'lazy';
+      image.referrerPolicy = 'no-referrer';
+      image.src = normalizeHttpUrl(project.image_url) || '../media/projects/portfolio.svg';
+      image.addEventListener('error', () => { image.src = '../media/projects/portfolio.svg'; }, { once: true });
+      const details = document.createElement('div');
+      const title = document.createElement('h3');
+      title.textContent = project.title || 'Project tanpa nama';
+      const description = document.createElement('p');
+      description.textContent = project.description || '';
+      const chips = document.createElement('div');
+      chips.className = 'chips';
+      (project.tech_stack || []).slice(0, 12).forEach((tag) => {
+        const chip = document.createElement('span');
+        chip.textContent = tag;
+        chips.appendChild(chip);
+      });
+      details.append(title, description, chips);
+      main.append(image, details);
+
+      const actions = document.createElement('div');
+      actions.className = 'project-item-actions';
+      const status = document.createElement('span');
+      status.className = project.published ? 'badge badge-live' : 'badge';
+      status.textContent = project.published ? 'Ditayangkan' : 'Draft';
+      const editButton = document.createElement('button');
+      editButton.className = 'text-button';
+      editButton.dataset.edit = String(project.id);
+      editButton.type = 'button';
+      editButton.textContent = 'Ubah';
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'danger-button';
+      deleteButton.dataset.delete = String(project.id);
+      deleteButton.type = 'button';
+      deleteButton.textContent = 'Hapus';
+      actions.append(status, editButton, deleteButton);
+      item.append(main, actions);
+      fragment.appendChild(item);
     });
+    projectList.replaceChildren(fragment);
   };
 
   const loadProjects = async () => {
-    const { data, error } = await client.from('projects').select('*').order('created_at', { ascending: false });
+    const { data, error } = await client.from('projects').select('id,title,description,image_url,tech_stack,demo_url,github_url,published,created_at').order('created_at', { ascending: false });
     if (error) {
       setStatus(formStatus, error.message, true);
       return;
@@ -146,24 +326,30 @@
 
   const importLegacyProjects = async () => {
     importLegacyButton.disabled = true;
-    importLegacyButton.textContent = 'Mengimpor...';
-    const { data: existing, error: readError } = await client.from('projects').select('title');
-    if (readError) {
-      setStatus(formStatus, readError.message, true);
-    } else {
-      const existingTitles = new Set((existing || []).map((project) => project.title));
-      const missing = legacyProjects.filter((project) => !existingTitles.has(project.title));
-      if (!missing.length) {
-        setStatus(formStatus, 'Semua project lama sudah ada di database.');
+    const originalLabel = importLegacyButton.textContent;
+    importLegacyButton.textContent = 'Mengimpor…';
+    try {
+      const { data: existing, error: readError } = await client.from('projects').select('title');
+      if (readError) {
+        setStatus(formStatus, readError.message, true);
       } else {
-        const { error } = await client.from('projects').insert(missing);
-        if (error) setStatus(formStatus, error.message, true);
-        else setStatus(formStatus, `${missing.length} project lama berhasil diimpor.`);
+        const existingTitles = new Set((existing || []).map((project) => String(project.title || '').toLowerCase()));
+        const missing = legacyProjects.filter((project) => !existingTitles.has(project.title.toLowerCase()));
+        if (!missing.length) {
+          setStatus(formStatus, 'Semua proyek lama sudah ada di database.');
+        } else {
+          const { error } = await client.from('projects').insert(missing);
+          if (error) setStatus(formStatus, error.message, true);
+          else setStatus(formStatus, `${missing.length} proyek lama berhasil diimpor.`);
+        }
+        await loadProjects();
       }
-      await loadProjects();
+    } catch {
+      setStatus(formStatus, 'Impor belum berhasil. Periksa koneksi lalu coba lagi.', true);
+    } finally {
+      importLegacyButton.disabled = false;
+      importLegacyButton.textContent = originalLabel;
     }
-    importLegacyButton.disabled = false;
-    importLegacyButton.textContent = 'Import project lama';
   };
 
   const showDashboard = () => {
@@ -194,9 +380,22 @@
     setupNotice.hidden = false;
   } else {
     client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
-    client.auth.getSession().then(({ data }) => {
-      if (data.session) showDashboard();
-      else authView.hidden = false;
+    client.auth.getSession().then(async ({ data, error }) => {
+      if (error) {
+        authView.hidden = false;
+        setStatus(authStatus, 'Sesi belum dapat diperiksa. Muat ulang halaman lalu coba lagi.', true);
+        return;
+      }
+      const sessionEmail = data.session?.user?.email?.trim().toLowerCase();
+      if (data.session && sessionEmail === adminEmail) {
+        showDashboard();
+      } else {
+        if (data.session) await client.auth.signOut();
+        authView.hidden = false;
+      }
+    }).catch(() => {
+      authView.hidden = false;
+      setStatus(authStatus, 'Koneksi autentikasi belum tersedia. Periksa koneksi lalu coba lagi.', true);
     });
 
     client.auth.onAuthStateChange((event) => {
@@ -210,9 +409,23 @@
         setStatus(authStatus, 'Email ini bukan email admin yang terdaftar.', true);
         return;
       }
-      const { error } = await client.auth.signInWithPassword({ email, password: document.querySelector('#login-password').value });
-      if (error) setStatus(authStatus, error.message, true);
-      else showDashboard();
+      const submitButton = loginForm.querySelector('[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Memeriksa…';
+      try {
+        const { data, error } = await client.auth.signInWithPassword({ email, password: document.querySelector('#login-password').value });
+        if (error) setStatus(authStatus, error.message, true);
+        else if (data.user?.email?.trim().toLowerCase() === adminEmail) showDashboard();
+        else {
+          await client.auth.signOut();
+          setStatus(authStatus, 'Akun ini tidak memiliki akses admin.', true);
+        }
+      } catch {
+        setStatus(authStatus, 'Login belum berhasil. Periksa koneksi lalu coba lagi.', true);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Masuk';
+      }
     });
 
     forgotPasswordButton.addEventListener('click', () => {
@@ -257,52 +470,126 @@
         setStatus(recoveryUpdateStatus, error.message, true);
         return;
       }
-      setStatus(recoveryUpdateStatus, 'Password berhasil diubah. Silakan login kembali.');
+      await client.auth.signOut();
+      setStatus(recoveryUpdateStatus, 'Password berhasil diubah. Silakan masuk kembali.');
       setTimeout(showLogin, 1800);
     });
 
-    document.querySelector('#logout-button').addEventListener('click', async () => {
-      await client.auth.signOut();
-      dashboardView.hidden = true;
-      loginForm.reset();
-      resetForm();
-      authView.hidden = false;
+    document.querySelector('#logout-button').addEventListener('click', async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      try {
+        const { error } = await client.auth.signOut();
+        if (error) {
+          setStatus(formStatus, 'Keluar belum berhasil. Coba lagi.', true);
+          return;
+        }
+        dashboardView.hidden = true;
+        loginForm.reset();
+        resetForm();
+        authView.hidden = false;
+      } catch {
+        setStatus(formStatus, 'Koneksi terputus. Keluar belum berhasil.', true);
+      } finally {
+        button.disabled = false;
+      }
     });
 
     projectForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const project = fields();
-      if (!isHttpUrl(project.image_url) || (project.demo_url && !isHttpUrl(project.demo_url)) || (project.github_url && !isHttpUrl(project.github_url))) {
-        setStatus(formStatus, 'URL gambar, demo, dan GitHub harus menggunakan http:// atau https://.', true);
+      const selectedFile = projectImageFile.files?.[0];
+      const imageUrl = normalizeHttpUrl(project.image_url);
+      const demoUrl = project.demo_url ? normalizeHttpUrl(project.demo_url) : '';
+      const githubUrl = project.github_url ? normalizeHttpUrl(project.github_url) : '';
+      if (!selectedFile && !imageUrl) {
+        setStatus(formStatus, 'Pilih gambar dari perangkat atau isi URL gambar HTTPS.', true);
+        return;
+      }
+      if ((project.demo_url && !demoUrl) || (project.github_url && !githubUrl)) {
+        setStatus(formStatus, 'URL demo dan GitHub harus menggunakan HTTPS tanpa kredensial.', true);
+        return;
+      }
+      if (project.title.length > 90 || project.description.length > 600 || project.tech_stack.length > 12 || project.tech_stack.some((tag) => tag.length > 32)) {
+        setStatus(formStatus, 'Batas konten: nama 90 karakter, deskripsi 600, dan maksimal 12 teknologi (32 karakter per tag).', true);
         return;
       }
       const duplicate = allProjects.some((item) => item.title.toLowerCase() === project.title.toLowerCase() && item.id !== project.id);
       if (duplicate) {
-        setStatus(formStatus, 'Nama project tersebut sudah ada. Gunakan nama yang berbeda.', true);
+        setStatus(formStatus, 'Nama proyek tersebut sudah ada. Gunakan nama yang berbeda.', true);
         return;
       }
-      const query = project.id ? client.from('projects').update(project).eq('id', project.id) : client.from('projects').insert({ title: project.title, description: project.description, image_url: project.image_url, tech_stack: project.tech_stack, demo_url: project.demo_url, github_url: project.github_url, published: project.published });
-      const { error } = await query;
-      if (error) {
-        setStatus(formStatus, error.message, true);
-        return;
+      const submitButton = projectSubmitButton;
+      const originalLabel = submitLabel.textContent;
+      const previousImageUrl = allProjects.find((item) => item.id === project.id)?.image_url || '';
+      let uploadedImage = null;
+      let databaseSaved = false;
+      submitButton.disabled = true;
+      cancelEdit.disabled = true;
+      submitLabel.textContent = 'Menyimpan…';
+      try {
+        if (selectedFile) {
+          setStatus(imageUploadStatus, 'Mengoptimalkan dan mengunggah gambar…');
+          uploadedImage = await uploadProjectImage(selectedFile);
+          project.image_url = uploadedImage.url;
+        } else {
+          project.image_url = imageUrl;
+        }
+        project.demo_url = demoUrl || null;
+        project.github_url = githubUrl || null;
+        const payload = {
+          title: project.title,
+          description: project.description,
+          image_url: project.image_url,
+          tech_stack: project.tech_stack,
+          demo_url: project.demo_url,
+          github_url: project.github_url,
+          published: project.published
+        };
+        const query = project.id
+          ? client.from('projects').update(payload).eq('id', project.id)
+          : client.from('projects').insert(payload);
+        const { error } = await query;
+        if (error) {
+          if (uploadedImage) await client.storage.from(storageBucket).remove([uploadedImage.path]);
+          setStatus(formStatus, error.message, true);
+          return;
+        }
+        databaseSaved = true;
+        if (previousImageUrl && project.image_url !== previousImageUrl) await removeManagedImage(previousImageUrl);
+        const successMessage = project.id ? 'Proyek berhasil diperbarui.' : 'Proyek berhasil ditambahkan.';
+        resetForm();
+        setStatus(formStatus, successMessage);
+        await loadProjects();
+      } catch (error) {
+        if (uploadedImage && !databaseSaved) await client.storage.from(storageBucket).remove([uploadedImage.path]);
+        const message = error?.message || 'Periksa koneksi dan konfigurasi upload gambar di admin/README.md.';
+        setStatus(formStatus, message, true);
+      } finally {
+        submitButton.disabled = false;
+        cancelEdit.disabled = false;
+        submitLabel.textContent = databaseSaved ? 'Simpan proyek' : originalLabel;
       }
-      setStatus(formStatus, project.id ? 'Project berhasil diperbarui.' : 'Project berhasil ditambahkan.');
-      resetForm();
-      loadProjects();
     });
 
     projectList.addEventListener('click', async (event) => {
-      const editId = event.target.dataset.edit;
-      const deleteId = event.target.dataset.delete;
+      const action = event.target.closest('button[data-edit], button[data-delete]');
+      if (!action || !projectList.contains(action)) return;
+      const editId = action.dataset.edit;
+      const deleteId = action.dataset.delete;
       if (editId) {
-        const { data } = await client.from('projects').select('*').eq('id', editId).single();
-        if (data) fillForm(data);
+        const { data, error } = await client.from('projects').select('id,title,description,image_url,tech_stack,demo_url,github_url,published').eq('id', editId).single();
+        if (error) setStatus(formStatus, error.message, true);
+        else if (data) fillForm(data);
       }
-      if (deleteId && window.confirm('Hapus project ini?')) {
+      if (deleteId && window.confirm('Hapus proyek ini?')) {
         const { error } = await client.from('projects').delete().eq('id', deleteId);
         if (error) setStatus(formStatus, error.message, true);
-        else loadProjects();
+        else {
+          const deletedProject = allProjects.find((project) => String(project.id) === String(deleteId));
+          if (deletedProject?.image_url) await removeManagedImage(deletedProject.image_url);
+          await loadProjects();
+        }
       }
     });
 
@@ -324,6 +611,10 @@
     projectSearch.addEventListener('input', () => renderProjects(filteredProjects()));
     projectFilter.addEventListener('change', () => renderProjects(filteredProjects()));
     ['project-title', 'project-description', 'project-image', 'project-tech', 'project-demo', 'project-github', 'project-published'].forEach((id) => document.querySelector(`#${id}`).addEventListener('input', updatePreview));
+    previewMedia.addEventListener('error', () => {
+      previewMedia.hidden = true;
+      projectPreview.classList.remove('has-image');
+    });
     updatePreview();
   }
 })();

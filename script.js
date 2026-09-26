@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const imageUrl = safeProjectUrl(project.image_url) || 'media/projects/portfolio.svg';
             const demoLink = demoUrl ? `<a href="${escapeHtml(demoUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat demo <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>` : '';
             const githubLink = githubUrl ? `<a href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-project-source">Kode sumber <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>` : '';
-            return `<article class="project-card reveal-bottom active"><div class="project-img"><img src="${escapeHtml(imageUrl)}" alt="Ilustrasi ${title}" loading="lazy" decoding="async" data-fallback="media/projects/portfolio.svg"></div><div class="project-info"><h3>${title}</h3><p>${description}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div></article>`;
+            return `<article class="project-card reveal-bottom active"><div class="project-img"><img src="${escapeHtml(imageUrl)}" alt="Gambar proyek ${title}" loading="lazy" decoding="async" data-fallback="media/projects/portfolio.svg"></div><div class="project-info"><h3>${title}</h3><p>${description}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div></article>`;
         }).join('');
 
         projectGrid.querySelectorAll('img[data-fallback]').forEach((image) => {

@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dashboard admin project portfolio Rizki Afandi.">
-  <title>Admin Project | RizzDev</title>
+  <meta name="description" content="Dashboard admin untuk mengelola proyek portofolio Rizki Afandi.">
+  <title>Admin Proyek | RizzDev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
   <link rel="stylesheet" href="admin-overrides.css">
   <link rel="stylesheet" href="admin-recovery.css">
   <link rel="stylesheet" href="admin-polish.css">
+  <link rel="stylesheet" href="admin-upload.css">
   <link rel="stylesheet" href="../motion.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="../portfolio-config.js"></script>
   <script src="admin.js" defer></script>
 </head>
@@ -23,8 +27,8 @@
 
     <section id="auth-view" class="auth-card" hidden>
       <p class="eyebrow">RizzDev Admin</p>
-      <h1>Kelola project portfolio</h1>
-      <p class="muted">Masuk untuk menambah, mengedit, atau menyembunyikan project tanpa menyentuh HTML.</p>
+      <h1>Kelola proyek portofolio</h1>
+      <p class="muted">Masuk untuk menambah, mengedit, atau menyembunyikan proyek tanpa menyentuh HTML.</p>
       <form id="login-form" class="stack-form">
         <label>Email<input id="login-email" type="email" autocomplete="email" required></label>
         <label>Password<div class="password-field"><input id="login-password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-target="login-password" aria-label="Tampilkan password"><span aria-hidden="true">◉</span></button></div></label>
@@ -54,7 +58,7 @@
 
     <section id="dashboard-view" hidden>
       <header class="dashboard-header">
-        <div><p class="eyebrow">RizzDev Admin</p><h1>Project portfolio</h1><p class="muted">Project published akan tampil otomatis di halaman utama.</p></div>
+        <div><p class="eyebrow">RizzDev Admin</p><h1>Proyek portofolio</h1><p class="muted">Proyek yang ditayangkan akan muncul otomatis di halaman utama.</p></div>
         <div class="header-actions"><button id="change-password-button" class="button button-secondary" type="button">Ubah password</button><button id="logout-button" class="button button-secondary" type="button">Keluar</button></div>
       </header>
 
@@ -70,29 +74,40 @@
 
       <div class="dashboard-grid">
         <section class="panel">
-          <div class="panel-heading"><div><h2 id="form-title">Tambah project</h2><p class="muted">Demo dan GitHub bersifat opsional.</p></div><button id="cancel-edit" class="text-button" type="button" hidden>Batal edit</button></div>
+          <div class="panel-heading"><div><h2 id="form-title">Tambah proyek</h2><p class="muted">Tautan demo dan GitHub bersifat opsional.</p></div><button id="cancel-edit" class="text-button" type="button" hidden>Batal edit</button></div>
           <form id="project-form" class="stack-form">
             <input id="project-id" type="hidden">
-            <label>Nama project<input id="project-title" type="text" placeholder="Contoh: SakuTracker" required></label>
-            <label>Deskripsi<textarea id="project-description" rows="4" placeholder="Apa yang project ini selesaikan?" required></textarea></label>
-            <label>URL gambar<input id="project-image" type="url" placeholder="https://..." required></label>
-            <label>Teknologi <span class="label-hint">pisahkan dengan koma</span><input id="project-tech" type="text" placeholder="HTML, CSS, JavaScript" required></label>
-            <label>URL demo <span class="label-hint">opsional</span><input id="project-demo" type="url" placeholder="https://..." ></label>
-            <label>URL GitHub <span class="label-hint">opsional</span><input id="project-github" type="url" placeholder="https://github.com/..." ></label>
+            <label>Nama proyek<input id="project-title" type="text" maxlength="90" placeholder="Contoh: SakuTracker" required></label>
+            <label>Deskripsi<textarea id="project-description" rows="4" maxlength="600" placeholder="Apa yang project ini selesaikan?" required></textarea></label>
+            <div class="image-field">
+              <label for="project-image-file">Gambar proyek</label>
+              <div class="image-file-control">
+                <input id="project-image-file" class="image-file-input" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="image-file-help image-upload-status">
+                <label for="project-image-file" class="image-file-button">Pilih gambar</label>
+                <span id="image-file-name">Belum ada gambar dipilih</span>
+              </div>
+              <p id="image-file-help" class="field-hint">JPG, PNG, atau WebP. Maksimal 6 MB; gambar akan dioptimalkan otomatis.</p>
+              <p id="image-upload-status" class="status" aria-live="polite"></p>
+              <label for="project-image" class="secondary-image-label">Atau gunakan URL gambar <span class="label-hint">HTTPS · opsional</span></label>
+              <input id="project-image" type="url" maxlength="2048" placeholder="https://...">
+            </div>
+            <label>Teknologi <span class="label-hint">pisahkan dengan koma</span><input id="project-tech" type="text" maxlength="250" placeholder="HTML, CSS, JavaScript" required></label>
+            <label>URL demo <span class="label-hint">opsional</span><input id="project-demo" type="url" maxlength="2048" placeholder="https://..."></label>
+            <label>URL GitHub <span class="label-hint">opsional</span><input id="project-github" type="url" maxlength="2048" placeholder="https://github.com/..."></label>
             <label class="check-row"><input id="project-published" type="checkbox" checked> Tampilkan di portfolio</label>
-            <button class="button button-primary" type="submit"><span id="submit-label">Simpan project</span></button>
+            <button class="button button-primary" type="submit"><span id="submit-label">Simpan proyek</span></button>
             <p id="form-status" class="status" aria-live="polite"></p>
           </form>
         </section>
 
         <section class="panel">
-          <div class="panel-heading"><div><h2>Daftar project</h2><p class="muted">Kelola project yang sudah tersimpan.</p></div><div class="panel-actions"><button id="import-legacy-projects" class="text-button" type="button">Import project lama</button><button id="refresh-projects" class="text-button" type="button">Refresh</button></div></div>
-          <div class="project-filters"><input id="project-search" type="search" placeholder="Cari nama atau teknologi..." aria-label="Cari project"><select id="project-filter" aria-label="Filter status project"><option value="all">Semua status</option><option value="published">Published</option><option value="draft">Draft</option></select></div>
+          <div class="panel-heading"><div><h2>Daftar proyek</h2><p class="muted">Kelola proyek yang sudah tersimpan.</p></div><div class="panel-actions"><button id="import-legacy-projects" class="text-button" type="button">Impor proyek lama</button><button id="refresh-projects" class="text-button" type="button">Muat ulang</button></div></div>
+          <div class="project-filters"><input id="project-search" type="search" placeholder="Cari nama atau teknologi..." aria-label="Cari proyek"><select id="project-filter" aria-label="Filter status proyek"><option value="all">Semua status</option><option value="published">Ditayangkan</option><option value="draft">Draft</option></select></div>
           <div id="project-list" class="project-list" aria-live="polite"></div>
         </section>
       </div>
 
-      <section class="panel preview-panel"><div class="panel-heading"><div><h2>Preview project</h2><p class="muted">Lihat bentuk kartu sebelum menyimpan.</p></div></div><article id="project-preview" class="project-preview"><div class="preview-media"></div><div class="preview-content"><span class="eyebrow">Preview</span><h3>Nama project Anda</h3><p>Isi form untuk melihat preview project.</p><div class="chips"></div></div></article></section>
+      <section class="panel preview-panel"><div class="panel-heading"><div><h2>Pratinjau proyek</h2><p class="muted">Lihat bentuk kartu sebelum menyimpan.</p></div></div><article id="project-preview" class="project-preview"><img class="preview-media" alt="" aria-hidden="true" hidden><div class="preview-content"><span id="preview-status" class="eyebrow">Draft</span><h3 id="preview-title">Nama proyek Anda</h3><p id="preview-description">Isi form untuk melihat pratinjau proyek.</p><div id="preview-chips" class="chips"></div><div id="preview-links" class="preview-links"></div></div></article></section>
     </section>
   </main>
 </body>

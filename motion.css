@@ -23,7 +23,6 @@ textarea {
   outline-offset: 3px;
 }
 
-.navbar,
 .page-shell,
 .admin-shell {
   animation: motion-enter var(--motion-enter) var(--motion-ease) both;
@@ -156,7 +155,6 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 
-  .navbar,
   .page-shell,
   .admin-shell {
     animation: none !important;
@@ -173,6 +171,13 @@ textarea {
 
 @media print {
   .cv-section-nav { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .hero,
+  .section {
+    scroll-margin-top: 100px;
+  }
 }
 
 @media print {

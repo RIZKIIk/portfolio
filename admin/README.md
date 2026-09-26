@@ -1,13 +1,13 @@
-# Portfolio Admin Setup
+# Pengaturan Admin Portofolio
 
-Dashboard ini memakai Supabase untuk satu akun admin.
+Dashboard ini memakai Supabase untuk satu akun admin. Policy database, bukan pemeriksaan email di browser, menjadi batas akses yang sebenarnya.
 
-## 1. Buat tabel dan policy
+## 1. Buat tabel dan policy yang aman
 
-Jalankan SQL berikut di Supabase SQL Editor:
+Jalankan SQL berikut di Supabase SQL Editor. Policy ini menjadikan proyek yang ditayangkan dapat dibaca publik; draf dan operasi tulis hanya dapat diakses email admin. Sesuaikan alamat pada policy agar sama persis dengan `adminEmail` di `portfolio-config.js`.
 
 ```sql
-create table public.projects (
+create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   description text not null,
@@ -21,53 +21,74 @@ create table public.projects (
 
 alter table public.projects enable row level security;
 
-create policy "Public can read published projects"
-on public.projects for select
-using (published = true or auth.uid() is not null);
+revoke all on table public.projects from anon, authenticated;
+grant select on public.projects to anon, authenticated;
+grant insert, update, delete on public.projects to authenticated;
 
-create policy "Admin can insert projects"
-on public.projects for insert
-to authenticated
-with check (auth.uid() is not null);
-
-create policy "Admin can update projects"
-on public.projects for update
-to authenticated
-using (auth.uid() is not null)
-with check (auth.uid() is not null);
-
-create policy "Admin can delete projects"
-on public.projects for delete
-to authenticated
-using (auth.uid() is not null);
-```
-
-Untuk single-admin yang lebih ketat, ganti policy authenticated dengan pengecekan email admin Anda:
-
-```sql
-(auth.jwt() ->> 'email') = 'EMAIL_ADMIN_ANDA'
-```
-
-Gunakan policy berikut agar database juga menolak user lain. Jalankan setelah policy awal dibuat:
-
-```sql
+drop policy if exists "Public can read published projects" on public.projects;
 drop policy if exists "Admin can insert projects" on public.projects;
 drop policy if exists "Admin can update projects" on public.projects;
 drop policy if exists "Admin can delete projects" on public.projects;
+drop policy if exists "Only portfolio admin can insert" on public.projects;
+drop policy if exists "Only portfolio admin can update" on public.projects;
+drop policy if exists "Only portfolio admin can delete" on public.projects;
+drop policy if exists "Portfolio admin can read all projects" on public.projects;
+drop policy if exists "Portfolio admin can insert projects" on public.projects;
+drop policy if exists "Portfolio admin can update projects" on public.projects;
+drop policy if exists "Portfolio admin can delete projects" on public.projects;
 
-create policy "Only portfolio admin can insert"
+create policy "Public can read published projects"
+on public.projects for select to anon, authenticated
+using (
+  published = true
+  or lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com'
+);
+
+create policy "Portfolio admin can insert projects"
 on public.projects for insert to authenticated
-with check ((auth.jwt() ->> 'email') = 'diazggs321@gmail.com');
+with check (lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com');
 
-create policy "Only portfolio admin can update"
+create policy "Portfolio admin can update projects"
 on public.projects for update to authenticated
-using ((auth.jwt() ->> 'email') = 'diazggs321@gmail.com')
-with check ((auth.jwt() ->> 'email') = 'diazggs321@gmail.com');
+using (lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com')
+with check (lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com');
 
-create policy "Only portfolio admin can delete"
+create policy "Portfolio admin can delete projects"
 on public.projects for delete to authenticated
-using ((auth.jwt() ->> 'email') = 'diazggs321@gmail.com');
+using (lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com');
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'portfolio-project-images',
+  'portfolio-project-images',
+  true,
+  3145728,
+  array['image/webp']
+)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Portfolio admin can upload project images" on storage.objects;
+drop policy if exists "Portfolio admin can delete project images" on storage.objects;
+
+create policy "Portfolio admin can upload project images"
+on storage.objects for insert to authenticated
+with check (
+  bucket_id = 'portfolio-project-images'
+  and lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com'
+);
+
+create policy "Portfolio admin can delete project images"
+on storage.objects for delete to authenticated
+using (
+  bucket_id = 'portfolio-project-images'
+  and lower(coalesce((select auth.jwt() ->> 'email'), '')) = 'diazggs321@gmail.com'
+);
 ```
+
+Policy RLS lama lain yang memberi akses lebih luas kepada `anon` atau `authenticated` harus dihapus juga, baik pada `public.projects` maupun `storage.objects`. Policy yang permissive bisa membuka akses meskipun policy admin di atas sudah ada. Bucket gambar bersifat public-read agar thumbnail yang ditayangkan dapat dilihat pengunjung; upload dan hapus tetap hanya untuk email admin.
 
 ## 2. Buat user admin
 
@@ -84,7 +105,7 @@ window.PORTFOLIO_CONFIG = {
 };
 ```
 
-Anon key boleh berada di frontend jika RLS aktif. Jangan masukkan service role key.
+Anon key/publishable key memang dikirim ke browser dan hanya aman jika RLS serta policy di atas sudah aktif. Jangan pernah masukkan service role/secret key ke `portfolio-config.js`.
 
 ## 4. Buka dashboard
 
@@ -96,10 +117,12 @@ Setelah login, klik **Import project lama** untuk memasukkan tiga project yang s
 
 Fitur dashboard yang tersedia:
 
+- **Upload gambar**: pilih JPG, PNG, atau WebP dari perangkat. Gambar dikecilkan hingga lebar/tinggi maksimal 1600 px dan dikonversi ke WebP sebelum diunggah. File sumber maksimal 6 MB; URL HTTPS tetap tersedia sebagai alternatif. Bucket Storage dan policy pada langkah 1 wajib dibuat lebih dulu.
+
 - **Ubah password**: buka panel di header, masukkan password baru minimal 8 karakter, lalu konfirmasi.
-- **Cari project**: cari berdasarkan nama atau teknologi.
-- **Filter status**: tampilkan semua, published, atau draft.
-- **Preview project**: lihat tampilan kartu sebelum menyimpan.
+- **Cari proyek**: cari berdasarkan nama atau teknologi.
+- **Filter status**: tampilkan semua, ditayangkan, atau draft.
+- **Pratinjau proyek**: lihat tampilan kartu sebelum menyimpan.
 - **Lupa password**: dari halaman login klik `Lupa password?`, masukkan email admin, lalu buka link reset dari inbox.
 
 Untuk reset password setelah deploy, tambahkan URL berikut di **Supabase → Authentication → URL Configuration → Redirect URLs**:

@@ -1560,6 +1560,10 @@ footer { border-top: 1px solid var(--glass-border); }
     .mute-btn, .background-btn, #back-to-top { min-width: 42px; min-height: 42px; width: 42px; height: 42px; }
     .stat-card span { font-size: 0.58rem; }
 }
+@media (max-width: 520px) {
+    /* Keep fixed convenience controls clear of full-width project and contact actions. */
+    #back-to-top { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
     .skip-link { transition: none; }
     .project-img img { transition: none; }
