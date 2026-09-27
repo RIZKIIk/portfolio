@@ -111,6 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundIcon = backgroundToggle ? backgroundToggle.querySelector('i') : null;
     const backgroundStorageKey = 'portfolio-background';
 
+    const updateMuteControl = (isVideo) => {
+        if (!muteToggle || !muteIcon || !bgVideo) return;
+        muteToggle.hidden = !isVideo;
+        muteToggle.setAttribute('aria-pressed', String(isVideo && !bgVideo.muted));
+        muteToggle.setAttribute('aria-label', bgVideo.muted ? 'Aktifkan suara video' : 'Bisukan suara video');
+        muteIcon.classList.toggle('fa-volume-mute', bgVideo.muted);
+        muteIcon.classList.toggle('fa-volume-up', !bgVideo.muted);
+    };
+
     const applyBackground = (background) => {
         const useImage = background === 'image';
         backgroundContainer?.classList.toggle('image-mode', useImage);
@@ -123,11 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (bgVideo) {
             if (useImage) {
+                bgVideo.muted = true;
                 bgVideo.pause();
             } else {
                 bgVideo.play().catch(() => {});
             }
         }
+        updateMuteControl(!useImage);
         try { localStorage.setItem(backgroundStorageKey, background); } catch (_) { /* Storage may be disabled. */ }
     };
 
@@ -138,6 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bgVideo?.addEventListener('error', () => {
         backgroundContainer?.classList.add('image-mode');
+        bgVideo.muted = true;
+        bgVideo.pause();
+        updateMuteControl(false);
         if (backgroundToggle) backgroundToggle.setAttribute('aria-label', 'Video tidak tersedia; menggunakan gambar latar');
         try { localStorage.setItem(backgroundStorageKey, 'image'); } catch (_) { /* Ignore unavailable storage. */ }
     });
@@ -148,27 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (bgVideo && muteToggle && muteIcon) {
-        // Inisialisasi ikon mute berdasarkan status muted video saat ini
-        if (!bgVideo.muted) {
-            muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
-            muteToggle.setAttribute('aria-label', 'Suara video');
-            muteToggle.setAttribute('aria-pressed', 'true');
-            bgVideo.play().catch(error => console.warn("Autoplay with sound blocked or failed:", error));
-        }
-
-        // Event listener untuk tombol mute/unmute
+        updateMuteControl(!backgroundContainer?.classList.contains('image-mode'));
         muteToggle.addEventListener('click', () => {
+            if (backgroundContainer?.classList.contains('image-mode')) return;
             bgVideo.muted = !bgVideo.muted;
-            if (bgVideo.muted) {
-                muteIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
-                muteToggle.setAttribute('aria-label', 'Suara video');
-                muteToggle.setAttribute('aria-pressed', 'false');
-            } else {
-                muteIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
-                muteToggle.setAttribute('aria-label', 'Suara video');
-                muteToggle.setAttribute('aria-pressed', 'true');
-                bgVideo.play().catch(error => console.warn("Failed to play video after unmute:", error));
-            }
+            updateMuteControl(true);
+            if (!bgVideo.muted) bgVideo.play().catch(() => {});
         });
     }
 

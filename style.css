@@ -1601,6 +1601,7 @@ footer { border-top: 1px solid var(--glass-border); }
 /* Polished controls and readable skill meters. */
 .skill-card { gap: .65rem; }
 .skill-meter { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .75rem; width: 100%; }
+.mute-btn[hidden] { display: none !important; }
 .skill-percent { min-width: 3.1ch; color: var(--text-muted); font-size: .78rem; font-weight: 800; text-align: right; }
 .progress-bar-container { flex: 1; }
 .video-bg-container { opacity: .56; }
