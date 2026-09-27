@@ -5,7 +5,12 @@
 .site-asset-field small,.field-hint { color:var(--muted); font-size:12px; font-weight:400; }
 .site-asset-field input[type=file],.site-asset-field input[type=url] { width:100%; min-width:0; padding:10px; border:1px solid var(--line); border-radius:11px; background:var(--surface-soft); color:var(--text); font:inherit; }
 .site-asset-preview { display:block; width:100%; height:160px; object-fit:cover; border:1px solid var(--line); border-radius:14px; background:#091321; }
-.site-asset-preview.portrait { object-position:center 30%; }
+.profile-crop-frame { width:min(100%,190px); aspect-ratio:1; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#091321; }
+.site-asset-preview.portrait { width:100%; height:100%; border:0; border-radius:0; object-position:center; }
+.profile-crop-tools { display:grid; gap:8px; }
+.profile-crop-tools[hidden] { display:none !important; }
+.profile-crop-tools label { display:grid; gap:3px; color:var(--muted); font-size:11px; font-weight:700; }
+.profile-crop-tools input { width:100%; accent-color:var(--accent); }
 .site-settings-actions { grid-column:1/-1; display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding-top:4px; }
 .site-settings-actions .field-hint { flex:1 1 300px; margin:0; }
 .site-settings-actions .status { flex-basis:100%; }

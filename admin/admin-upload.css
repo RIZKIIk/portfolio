@@ -91,7 +91,7 @@
   width: 100%;
   min-width: 0;
   min-height: 0;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
   background: linear-gradient(135deg, var(--surface), var(--surface-soft));
 }

@@ -37,12 +37,18 @@
   const previewDescription = document.querySelector('#preview-description');
   const previewChips = document.querySelector('#preview-chips');
   const previewLinks = document.querySelector('#preview-links');
+  const projectCrop = {
+    tools: document.querySelector('#project-crop-tools'),
+    zoom: document.querySelector('#project-crop-zoom'),
+    x: document.querySelector('#project-crop-x'),
+    y: document.querySelector('#project-crop-y')
+  };
   const projectSubmitButton = projectForm.querySelector('[type="submit"]');
   const siteSettingsForm = document.querySelector('#site-settings-form');
   const siteSettingsStatus = document.querySelector('#site-settings-status');
   const saveSiteSettingsButton = document.querySelector('#save-site-settings');
   const siteAssetFields = {
-    profile: { file: document.querySelector('#settings-profile-file'), url: document.querySelector('#settings-profile-url'), preview: document.querySelector('#settings-profile-preview'), type: 'image' },
+    profile: { file: document.querySelector('#settings-profile-file'), url: document.querySelector('#settings-profile-url'), preview: document.querySelector('#settings-profile-preview'), cropTools: document.querySelector('#profile-crop-tools'), zoom: document.querySelector('#settings-profile-zoom'), x: document.querySelector('#settings-profile-x'), y: document.querySelector('#settings-profile-y'), type: 'image', crop: true },
     background: { file: document.querySelector('#settings-background-file'), url: document.querySelector('#settings-background-url'), preview: document.querySelector('#settings-background-preview'), type: 'image' },
     video: { file: document.querySelector('#settings-video-file'), url: document.querySelector('#settings-video-url'), preview: document.querySelector('#settings-video-preview'), type: 'video' }
   };
@@ -101,6 +107,10 @@
     if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
     previewObjectUrl = '';
     if (clearFile) projectImageFile.value = '';
+    projectCrop.tools.hidden = true;
+    projectCrop.zoom.value = '1';
+    projectCrop.x.value = '50';
+    projectCrop.y.value = '50';
     imageFileName.textContent = 'Belum ada gambar dipilih';
     setStatus(imageUploadStatus, '');
   };
@@ -134,6 +144,66 @@
     }
   };
 
+  const optimizeProfileImage = async (file) => {
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!acceptedTypes.includes(file.type)) throw new Error('Pilih gambar JPG, PNG, atau WebP.');
+    if (file.size > maxSourceImageBytes) throw new Error('Ukuran gambar maksimal 6 MB.');
+    if (!('createImageBitmap' in window)) throw new Error('Browser ini belum mendukung pemrosesan gambar.');
+    const bitmap = await createImageBitmap(file);
+    try {
+      if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 40000000) throw new Error('Dimensi gambar terlalu besar.');
+      const zoom = Number(siteAssetFields.profile.zoom.value) || 1;
+      const cropSize = Math.min(bitmap.width, bitmap.height) / zoom;
+      const x = (bitmap.width - cropSize) * (Number(siteAssetFields.profile.x.value) / 100);
+      const y = (bitmap.height - cropSize) * (Number(siteAssetFields.profile.y.value) / 100);
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 1200;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Gambar tidak dapat diproses oleh browser.');
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(bitmap, x, y, cropSize, cropSize, 0, 0, canvas.width, canvas.height);
+      const optimized = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.84));
+      if (!optimized) throw new Error('Crop gambar gagal dibuat.');
+      if (optimized.size > maxStoredImageBytes) throw new Error('Hasil foto masih terlalu besar. Coba atur crop atau pilih gambar lain.');
+      return optimized;
+    } finally {
+      bitmap.close();
+    }
+  };
+
+  const optimizeProjectThumbnail = async (file) => {
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!acceptedTypes.includes(file.type)) throw new Error('Pilih gambar JPG, PNG, atau WebP.');
+    if (file.size > maxSourceImageBytes) throw new Error('Ukuran gambar maksimal 6 MB.');
+    if (!('createImageBitmap' in window)) throw new Error('Browser ini belum mendukung pemrosesan gambar.');
+    const bitmap = await createImageBitmap(file);
+    try {
+      if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 40000000) throw new Error('Dimensi gambar terlalu besar.');
+      const ratio = 16 / 10;
+      const zoom = Number(projectCrop.zoom.value) || 1;
+      const cropWidth = Math.min(bitmap.width, bitmap.height * ratio) / zoom;
+      const cropHeight = cropWidth / ratio;
+      const x = (bitmap.width - cropWidth) * (Number(projectCrop.x.value) / 100);
+      const y = (bitmap.height - cropHeight) * (Number(projectCrop.y.value) / 100);
+      const canvas = document.createElement('canvas');
+      canvas.width = 1600;
+      canvas.height = 1000;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Thumbnail tidak dapat diproses oleh browser.');
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(bitmap, x, y, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
+      const optimized = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.84));
+      if (!optimized) throw new Error('Crop thumbnail gagal dibuat.');
+      if (optimized.size > maxStoredImageBytes) throw new Error('Thumbnail hasil crop terlalu besar. Coba gambar lain.');
+      return optimized;
+    } finally {
+      bitmap.close();
+    }
+  };
+
   const createStoragePath = (folder = 'projects', extension = 'webp') => {
     if (crypto.randomUUID) return `${folder}/${crypto.randomUUID()}.${extension}`;
     const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -141,7 +211,7 @@
   };
 
   const uploadProjectImage = async (file) => {
-    const image = await optimizeImage(file);
+    const image = await optimizeProjectThumbnail(file);
     const path = createStoragePath();
     const { error } = await client.storage.from(storageBucket).upload(path, image, {
       cacheControl: '31536000',
@@ -170,7 +240,16 @@
       preview.preview.load();
     } else {
       preview.preview.src = source;
+      if (field === 'profile') updateProfileCropPreview();
     }
+  };
+
+  const updateProfileCropPreview = () => {
+    const profile = siteAssetFields.profile;
+    const hasFile = Boolean(profile.file.files?.length);
+    profile.cropTools.hidden = !hasFile;
+    profile.preview.style.transform = hasFile ? `scale(${profile.zoom.value})` : '';
+    profile.preview.style.objectPosition = hasFile ? `${profile.x.value}% ${profile.y.value}%` : 'center';
   };
 
   const loadSiteSettings = async () => {
@@ -205,7 +284,7 @@
       extension = 'mp4';
       contentType = 'video/mp4';
     } else {
-      body = await optimizeImage(file);
+      body = field.crop ? await optimizeProfileImage(file) : await optimizeImage(file);
       extension = 'webp';
       contentType = 'image/webp';
     }
@@ -282,6 +361,7 @@
     }
     imageFileName.textContent = `${file.name} · ${Math.max(1, Math.round(file.size / 1024))} KB`;
     previewObjectUrl = URL.createObjectURL(file);
+    projectCrop.tools.hidden = false;
     setStatus(imageUploadStatus, 'Gambar siap dioptimalkan saat disimpan.');
     updatePreview();
   });
@@ -294,6 +374,8 @@
     previewDescription.textContent = project.description || 'Isi form untuk melihat preview project.';
     previewMedia.hidden = !imageUrl;
     previewMedia.referrerPolicy = 'no-referrer';
+    previewMedia.style.transform = previewObjectUrl ? `scale(${projectCrop.zoom.value})` : '';
+    previewMedia.style.objectPosition = previewObjectUrl ? `${projectCrop.x.value}% ${projectCrop.y.value}%` : 'center';
     projectPreview.classList.toggle('has-image', Boolean(imageUrl));
     if (imageUrl && previewMedia.getAttribute('src') !== imageUrl) previewMedia.src = imageUrl;
     if (!imageUrl) previewMedia.removeAttribute('src');
@@ -694,6 +776,8 @@
         if (!field.file.files?.length) updateSiteAssetPreview(key, field.url.value.trim());
       });
     });
+    ['zoom', 'x', 'y'].forEach((control) => siteAssetFields.profile[control].addEventListener('input', updateProfileCropPreview));
+    ['zoom', 'x', 'y'].forEach((control) => projectCrop[control].addEventListener('input', updatePreview));
     siteSettingsForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       saveSiteSettingsButton.disabled = true;
@@ -730,6 +814,11 @@
           field.file.value = '';
           if (sitePreviewUrls[key]) URL.revokeObjectURL(sitePreviewUrls[key]);
           sitePreviewUrls[key] = '';
+          if (key === 'profile') {
+            field.zoom.value = '1';
+            field.x.value = '50';
+            field.y.value = '50';
+          }
           updateSiteAssetPreview(key, values[key]);
         });
         setStatus(siteSettingsStatus, 'Konfigurasi tersimpan. Perubahan tampil di website saat dimuat ulang.');

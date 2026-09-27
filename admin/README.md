@@ -148,8 +148,8 @@ Setelah login, klik **Import project lama** untuk memasukkan tiga project yang s
 
 Fitur dashboard yang tersedia:
 
-- **Upload gambar**: pilih JPG, PNG, atau WebP dari perangkat. Gambar dikecilkan hingga lebar/tinggi maksimal 1600 px dan dikonversi ke WebP sebelum diunggah. File sumber maksimal 6 MB; URL HTTPS tetap tersedia sebagai alternatif. Bucket Storage dan policy pada langkah 1 wajib dibuat lebih dulu.
-- **Konfigurasi website**: panel Identitas Visual mengatur foto profil, gambar latar, dan video latar. Foto profil ikut diperbarui di halaman CV. Aset dapat diunggah (video MP4 maksimal 24 MB) atau memakai URL HTTPS. Upload memakai bucket dan policy Storage yang sama; pengaturan disimpan pada tabel `site_settings` dari SQL langkah 1.
+- **Upload thumbnail proyek**: pilih JPG, PNG, atau WebP lalu atur zoom dan posisi crop rasio 16:10 sesuai pratinjau kartu. File sumber maksimal 6 MB dan hasil crop dikonversi ke WebP sebelum diunggah. URL HTTPS tetap tersedia sebagai alternatif.
+- **Konfigurasi website**: panel Identitas Visual mengatur foto profil, gambar latar, dan video latar. Foto profil ikut diperbarui di halaman CV; saat upload, atur zoom dan posisi crop persegi melalui pratinjau. Gambar dikecilkan dan dikonversi ke WebP. Video MP4 maksimal 24 MB. Aset juga dapat memakai URL HTTPS. Pengaturan disimpan pada tabel `site_settings` dari SQL langkah 1.
 
 - **Ubah password**: buka panel di header, masukkan password baru minimal 8 karakter, lalu konfirmasi.
 - **Cari proyek**: cari berdasarkan nama atau teknologi.
