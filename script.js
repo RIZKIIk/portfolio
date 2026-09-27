@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .eq('published', true)
             .order('created_at', { ascending: false });
 
-        if (error || !data?.length) return;
+        if (error || !Array.isArray(data)) return;
 
         const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({
             '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
@@ -42,6 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const projectGrid = document.querySelector('.projects-grid');
         if (!projectGrid) return;
+        if (!data.length) {
+            projectGrid.replaceChildren(Object.assign(document.createElement('p'), {
+                className: 'project-empty-state',
+                textContent: 'Belum ada proyek yang ditayangkan.'
+            }));
+            return;
+        }
 
         projectGrid.innerHTML = data.map((project) => {
             const title = escapeHtml(project.title || 'Proyek');
@@ -121,12 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 bgVideo.play().catch(() => {});
             }
         }
-        localStorage.setItem(backgroundStorageKey, background);
+        try { localStorage.setItem(backgroundStorageKey, background); } catch (_) { /* Storage may be disabled. */ }
     };
 
-    const savedBackground = localStorage.getItem(backgroundStorageKey);
+    let savedBackground = null;
+    try { savedBackground = localStorage.getItem(backgroundStorageKey); } catch (_) { /* Image remains the default. */ }
     const initialBackground = !prefersReducedMotion && savedBackground === 'video' ? 'video' : 'image';
     applyBackground(initialBackground);
+
+    bgVideo?.addEventListener('error', () => {
+        backgroundContainer?.classList.add('image-mode');
+        if (backgroundToggle) backgroundToggle.setAttribute('aria-label', 'Video tidak tersedia; menggunakan gambar latar');
+        try { localStorage.setItem(backgroundStorageKey, 'image'); } catch (_) { /* Ignore unavailable storage. */ }
+    });
 
     backgroundToggle?.addEventListener('click', () => {
         const nextBackground = backgroundContainer?.classList.contains('image-mode') ? 'video' : 'image';
@@ -269,10 +283,11 @@ document.addEventListener('DOMContentLoaded', () => {
             themeToggle.setAttribute('aria-label', 'Tema warna');
         }
         document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isLight ? '#f5f8f6' : '#07111a');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch (_) { /* Theme still applies for this session. */ }
     };
 
-    const savedTheme = localStorage.getItem('theme');
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem('theme'); } catch (_) { /* Use default theme. */ }
     const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
     applyTheme(savedTheme === 'light' || (!savedTheme && prefersLight));
 

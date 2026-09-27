@@ -1,7 +1,8 @@
 (() => {
   const config = window.PORTFOLIO_CONFIG || {};
   const adminEmail = (config.adminEmail || '').trim().toLowerCase();
-  const hasConfig = Boolean(config.supabaseUrl && config.supabaseAnonKey && config.adminEmail && window.supabase);
+  const hasCredentials = Boolean(config.supabaseUrl && config.supabaseAnonKey && config.adminEmail);
+  const hasConfig = Boolean(hasCredentials && window.supabase);
   const setupNotice = document.querySelector('#setup-notice');
   const authView = document.querySelector('#auth-view');
   const dashboardView = document.querySelector('#dashboard-view');
@@ -376,8 +377,11 @@
     document.querySelector('#recovery-password').focus();
   };
 
-  if (!hasConfig) {
+  if (!hasCredentials) {
     setupNotice.hidden = false;
+  } else if (!window.supabase) {
+    authView.hidden = false;
+    setStatus(authStatus, 'Layanan autentikasi belum termuat. Periksa koneksi lalu muat ulang halaman.', true);
   } else {
     client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
     client.auth.getSession().then(async ({ data, error }) => {
