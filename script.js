@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let savedBackground = null;
     try { savedBackground = localStorage.getItem(backgroundStorageKey); } catch (_) { /* Image remains the default. */ }
-    const initialBackground = !prefersReducedMotion && savedBackground === 'video' ? 'video' : 'image';
+    // New visitors get the muted video by default; keep their last background choice.
+    const initialBackground = savedBackground === 'image' ? 'image' : 'video';
     applyBackground(initialBackground);
 
     bgVideo?.addEventListener('error', () => {
