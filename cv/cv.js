@@ -32,10 +32,16 @@
   // Reuse the portfolio's published project source so the CV stays in sync.
   window.addEventListener('load', async () => {
     const config = window.PORTFOLIO_CONFIG || {};
-    const grid = document.querySelector('.projects-grid');
-    if (!grid || !window.supabase || !config.supabaseUrl || !config.supabaseAnonKey) return;
+    if (!window.supabase || !config.supabaseUrl || !config.supabaseAnonKey) return;
     try {
       const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+      const { data: settings } = await client.from('site_settings')
+        .select('profile_image_url').eq('id', 'main').maybeSingle();
+      const profileImage = document.querySelector('.profile-image');
+      if (settings?.profile_image_url && profileImage) profileImage.src = settings.profile_image_url;
+
+      const grid = document.querySelector('.projects-grid');
+      if (!grid) return;
       const { data, error } = await client.from('projects')
         .select('title,description,tech_stack,published')
         .eq('published', true).order('created_at', { ascending: false });

@@ -38,12 +38,21 @@
   const previewChips = document.querySelector('#preview-chips');
   const previewLinks = document.querySelector('#preview-links');
   const projectSubmitButton = projectForm.querySelector('[type="submit"]');
+  const siteSettingsForm = document.querySelector('#site-settings-form');
+  const siteSettingsStatus = document.querySelector('#site-settings-status');
+  const saveSiteSettingsButton = document.querySelector('#save-site-settings');
+  const siteAssetFields = {
+    profile: { file: document.querySelector('#settings-profile-file'), url: document.querySelector('#settings-profile-url'), preview: document.querySelector('#settings-profile-preview'), type: 'image' },
+    background: { file: document.querySelector('#settings-background-file'), url: document.querySelector('#settings-background-url'), preview: document.querySelector('#settings-background-preview'), type: 'image' },
+    video: { file: document.querySelector('#settings-video-file'), url: document.querySelector('#settings-video-url'), preview: document.querySelector('#settings-video-preview'), type: 'video' }
+  };
   const storageBucket = 'portfolio-project-images';
   const maxSourceImageBytes = 6 * 1024 * 1024;
   const maxStoredImageBytes = 3 * 1024 * 1024;
   let allProjects = [];
   let client;
   let previewObjectUrl = '';
+  const sitePreviewUrls = {};
 
   document.querySelectorAll('.password-toggle').forEach((toggle) => {
     toggle.addEventListener('click', () => {
@@ -125,10 +134,10 @@
     }
   };
 
-  const createStoragePath = () => {
-    if (crypto.randomUUID) return `projects/${crypto.randomUUID()}.webp`;
+  const createStoragePath = (folder = 'projects', extension = 'webp') => {
+    if (crypto.randomUUID) return `${folder}/${crypto.randomUUID()}.${extension}`;
     const bytes = crypto.getRandomValues(new Uint8Array(16));
-    return `projects/${Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')}.webp`;
+    return `${folder}/${Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')}.${extension}`;
   };
 
   const uploadProjectImage = async (file) => {
@@ -153,6 +162,61 @@
     return { path, url: data.publicUrl };
   };
 
+  const updateSiteAssetPreview = (field, value = '') => {
+    const preview = siteAssetFields[field];
+    const source = value || (field === 'profile' ? '../media/me.jpg' : field === 'background' ? '../media/foto.jpg' : '../media/video.mp4');
+    if (preview.type === 'video') {
+      preview.preview.src = source;
+      preview.preview.load();
+    } else {
+      preview.preview.src = source;
+    }
+  };
+
+  const loadSiteSettings = async () => {
+    const { data, error } = await client.from('site_settings')
+      .select('profile_image_url,background_image_url,background_video_url')
+      .eq('id', 'main').maybeSingle();
+    if (error) {
+      setStatus(siteSettingsStatus, 'Pengaturan belum dapat dimuat. Jalankan SQL site_settings dari admin/README.md.', true);
+      return;
+    }
+    const values = {
+      profile: data?.profile_image_url || '',
+      background: data?.background_image_url || '',
+      video: data?.background_video_url || ''
+    };
+    Object.entries(values).forEach(([key, value]) => {
+      siteAssetFields[key].url.value = value;
+      updateSiteAssetPreview(key, value);
+    });
+    setStatus(siteSettingsStatus, data ? 'Pengaturan website dimuat.' : 'Belum ada pengaturan tersimpan; aset bawaan sedang digunakan.');
+  };
+
+  const uploadSiteAsset = async (file, field) => {
+    const isVideo = field.type === 'video';
+    let body;
+    let extension;
+    let contentType;
+    if (isVideo) {
+      if (file.type !== 'video/mp4') throw new Error('Video latar harus berformat MP4.');
+      if (file.size > 24 * 1024 * 1024) throw new Error('Ukuran video maksimal 24 MB.');
+      body = file;
+      extension = 'mp4';
+      contentType = 'video/mp4';
+    } else {
+      body = await optimizeImage(file);
+      extension = 'webp';
+      contentType = 'image/webp';
+    }
+    const path = createStoragePath('settings', extension);
+    const { error } = await client.storage.from(storageBucket).upload(path, body, {
+      cacheControl: '3600', contentType, upsert: false
+    });
+    if (error) throw error;
+    return client.storage.from(storageBucket).getPublicUrl(path).data.publicUrl;
+  };
+
   const managedStoragePath = (imageUrl) => {
     try {
       const url = new URL(imageUrl);
@@ -160,7 +224,7 @@
       const prefix = `/storage/v1/object/public/${storageBucket}/`;
       if (url.origin !== supabaseOrigin || !url.pathname.startsWith(prefix)) return '';
       const path = decodeURIComponent(url.pathname.slice(prefix.length));
-      return /^projects\/(?:[0-9a-f-]{36}|[0-9a-f]{32})\.webp$/i.test(path) ? path : '';
+      return /^(?:projects\/(?:[0-9a-f-]{36}|[0-9a-f]{32})\.webp|settings\/(?:[0-9a-f-]{36}|[0-9a-f]{32})\.(?:webp|mp4))$/i.test(path) ? path : '';
     } catch {
       return '';
     }
@@ -357,6 +421,7 @@
     authView.hidden = true;
     dashboardView.hidden = false;
     loadProjects();
+    loadSiteSettings();
   };
 
   const showLogin = () => {
@@ -614,6 +679,68 @@
     });
     projectSearch.addEventListener('input', () => renderProjects(filteredProjects()));
     projectFilter.addEventListener('change', () => renderProjects(filteredProjects()));
+    Object.entries(siteAssetFields).forEach(([key, field]) => {
+      field.file.addEventListener('change', () => {
+        const file = field.file.files?.[0];
+        if (sitePreviewUrls[key]) URL.revokeObjectURL(sitePreviewUrls[key]);
+        sitePreviewUrls[key] = file ? URL.createObjectURL(file) : '';
+        if (file) field.url.value = '';
+        updateSiteAssetPreview(key, sitePreviewUrls[key] || field.url.value);
+      });
+      field.url.addEventListener('input', () => {
+        if (!field.file.files?.length && !field.url.value.trim()) updateSiteAssetPreview(key);
+      });
+      field.url.addEventListener('change', () => {
+        if (!field.file.files?.length) updateSiteAssetPreview(key, field.url.value.trim());
+      });
+    });
+    siteSettingsForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      saveSiteSettingsButton.disabled = true;
+      saveSiteSettingsButton.textContent = 'Mengunggah dan menyimpan…';
+      try {
+        const previousValues = Object.fromEntries(Object.entries(siteAssetFields).map(([key, field]) => [key, field.url.value.trim()]));
+        const values = {};
+        for (const [key, field] of Object.entries(siteAssetFields)) {
+          const file = field.file.files?.[0];
+          const url = field.url.value.trim();
+          if (file) values[key] = await uploadSiteAsset(file, field);
+          else if (url) {
+            const validUrl = normalizeHttpUrl(url);
+            if (!validUrl) throw new Error('Semua URL aset harus menggunakan HTTPS tanpa kredensial.');
+            if (field.type === 'video' && !/\.mp4(?:$|[?#])/i.test(new URL(validUrl).pathname + new URL(validUrl).search)) {
+              throw new Error('URL video latar harus mengarah ke file MP4.');
+            }
+            values[key] = validUrl;
+          } else values[key] = null;
+        }
+        const { error } = await client.from('site_settings').upsert({
+          id: 'main',
+          profile_image_url: values.profile,
+          background_image_url: values.background,
+          background_video_url: values.video,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+        if (error) throw error;
+        for (const key of Object.keys(siteAssetFields)) {
+          if (previousValues[key] && previousValues[key] !== values[key]) await removeManagedImage(previousValues[key]);
+        }
+        Object.entries(siteAssetFields).forEach(([key, field]) => {
+          field.url.value = values[key] || '';
+          field.file.value = '';
+          if (sitePreviewUrls[key]) URL.revokeObjectURL(sitePreviewUrls[key]);
+          sitePreviewUrls[key] = '';
+          updateSiteAssetPreview(key, values[key]);
+        });
+        setStatus(siteSettingsStatus, 'Konfigurasi tersimpan. Perubahan tampil di website saat dimuat ulang.');
+      } catch (error) {
+        const message = error?.message || 'Konfigurasi gagal disimpan. Periksa koneksi, Storage, dan SQL site_settings.';
+        setStatus(siteSettingsStatus, message, true);
+      } finally {
+        saveSiteSettingsButton.disabled = false;
+        saveSiteSettingsButton.textContent = 'Simpan konfigurasi';
+      }
+    });
     ['project-title', 'project-description', 'project-image', 'project-tech', 'project-demo', 'project-github', 'project-published'].forEach((id) => document.querySelector(`#${id}`).addEventListener('input', updatePreview));
     previewMedia.addEventListener('error', () => {
       previewMedia.hidden = true;

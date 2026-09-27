@@ -73,15 +73,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const loadPublishedSiteSettings = async () => {
+        const config = window.PORTFOLIO_CONFIG || {};
+        if (!window.supabase || !config.supabaseUrl || !config.supabaseAnonKey) return;
+        try {
+            const { data, error } = await window.supabase
+                .createClient(config.supabaseUrl, config.supabaseAnonKey)
+                .from('site_settings')
+                .select('profile_image_url,background_image_url,background_video_url')
+                .eq('id', 'main')
+                .maybeSingle();
+            if (error || !data) return;
+            const safeUrl = (value) => {
+                if (typeof value !== 'string' || !value.trim()) return '';
+                try {
+                    const url = new URL(String(value), window.location.href);
+                    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+                } catch { return ''; }
+            };
+            const profileUrl = safeUrl(data.profile_image_url);
+            const imageUrl = safeUrl(data.background_image_url);
+            const videoUrl = safeUrl(data.background_video_url);
+            const profileImage = document.getElementById('profile-image');
+            const backgroundImage = document.querySelector('.background-image');
+            const bgVideo = document.getElementById('bgVideo');
+            if (profileImage && profileUrl) profileImage.src = profileUrl;
+            if (backgroundImage && imageUrl) {
+                backgroundImage.src = imageUrl;
+                backgroundImage.addEventListener('error', () => { backgroundImage.src = 'media/foto.jpg'; }, { once: true });
+            }
+            if (bgVideo) {
+                bgVideo.poster = imageUrl || 'media/foto.jpg';
+                if (videoUrl) bgVideo.src = videoUrl;
+                else bgVideo.removeAttribute('src');
+                bgVideo.load();
+                if (!backgroundContainer?.classList.contains('image-mode')) bgVideo.play().catch(() => {});
+            }
+        } catch { /* Built-in images and video remain available as fallback. */ }
+    };
+
     const projectConfig = window.PORTFOLIO_CONFIG || {};
     if (projectConfig.supabaseUrl && projectConfig.supabaseAnonKey) {
         if (window.supabase) {
             loadPublishedProjects();
+            loadPublishedSiteSettings();
         } else {
             const supabaseLoader = document.createElement('script');
             supabaseLoader.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
             supabaseLoader.async = true;
-            supabaseLoader.addEventListener('load', loadPublishedProjects, { once: true });
+            supabaseLoader.addEventListener('load', () => {
+                loadPublishedProjects();
+                loadPublishedSiteSettings();
+            }, { once: true });
             document.head.appendChild(supabaseLoader);
         }
     }
