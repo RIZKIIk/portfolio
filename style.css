@@ -1561,8 +1561,18 @@ footer { border-top: 1px solid var(--glass-border); }
     .stat-card span { font-size: 0.58rem; }
 }
 @media (max-width: 520px) {
-    /* Keep fixed convenience controls clear of full-width project and contact actions. */
-    #back-to-top { display: none; }
+    #back-to-top {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        right: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        min-height: 46px;
+        z-index: 1001;
+    }
 }
 @media (prefers-reduced-motion: reduce) {
     .skip-link { transition: none; }
