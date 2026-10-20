@@ -42,7 +42,9 @@
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
-  transition: filter 180ms ease, transform 180ms ease;
+  transition:
+    filter 180ms ease,
+    transform 180ms ease;
 }
 
 .image-file-button:hover {

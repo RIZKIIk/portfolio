@@ -49,7 +49,9 @@ textarea {
 .admin-shell textarea,
 .project-preview,
 .project-item {
-  transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
+  transition-property:
+    color, background-color, border-color, box-shadow, opacity, transform,
+    filter;
   transition-duration: var(--motion-fast);
   transition-timing-function: var(--motion-ease);
 }
@@ -73,7 +75,9 @@ textarea {
 .nav-links a,
 .side-section a,
 .brand {
-  transition: color var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) var(--motion-ease);
+  transition:
+    color var(--motion-fast) var(--motion-ease),
+    opacity var(--motion-fast) var(--motion-ease);
 }
 
 .cv-section-nav {
@@ -89,12 +93,16 @@ textarea {
 
 .cv-section-nav a {
   padding: 0.48rem 0.78rem;
-  border: 1px solid var(--line, rgba(255,255,255,.14));
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.14));
   border-radius: 999px;
-  background: var(--surface, rgba(15,23,42,.88));
+  background: var(--surface, rgba(15, 23, 42, 0.88));
   color: var(--text, #f8fafc);
   text-decoration: none;
-  transition: color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
+  transition:
+    color var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
 }
 
 .cv-section-nav a:hover {
@@ -102,7 +110,9 @@ textarea {
   color: var(--accent, var(--primary, #34d399));
 }
 
-.cv-page .section-title { scroll-margin-top: 1.25rem; }
+.cv-page .section-title {
+  scroll-margin-top: 1.25rem;
+}
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .fact-card:hover,
@@ -115,7 +125,11 @@ textarea {
   .admin-shell .panel:hover,
   .project-item:hover {
     transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--accent, var(--primary, #34d399)) 48%, transparent);
+    border-color: color-mix(
+      in srgb,
+      var(--accent, var(--primary, #34d399)) 48%,
+      transparent
+    );
     box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
   }
 
@@ -139,12 +153,20 @@ textarea {
 }
 
 @keyframes motion-enter {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto !important; }
+  html {
+    scroll-behavior: auto !important;
+  }
 
   *,
   *::before,
@@ -170,7 +192,9 @@ textarea {
 }
 
 @media print {
-  .cv-section-nav { display: none !important; }
+  .cv-section-nav {
+    display: none !important;
+  }
 }
 
 @media (min-width: 769px) {
