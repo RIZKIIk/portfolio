@@ -15,8 +15,8 @@ export function initializePortfolioSharing() {
 
     button.addEventListener('click', async () => {
         const shareData = {
-            title: 'Rizki Afandi | Portfolio',
-            text: 'Lihat portfolio Rizki Afandi, Junior Software Developer.',
+            title: 'Rizki Afandi | Programmer & Technology Enthusiast | RizzDev',
+            text: 'Lihat portofolio Rizki Afandi, programmer dan technology enthusiast di balik RizzDev.',
             url: window.location.href.split('#')[0]
         };
 

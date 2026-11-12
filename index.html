@@ -8,52 +8,79 @@
     <!-- Metadata Dasar -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rizki Afandi | Portofolio Web Developer</title>
-    <meta name="description" content="Portfolio Rizki Afandi, juga dikenal sebagai Rizqi Afandi, Junior Software Developer dengan fokus pada web modern, UI/UX, dan frontend development.">
-    <meta name="keywords" content="Rizki Afandi, Rizqi Afandi, RizzDev, portfolio web developer, Junior Software Developer, UI/UX">
+    <title>Rizki Afandi | Programmer &amp; Technology Enthusiast | RizzDev</title>
+    <meta name="description" content="Rizki Afandi adalah programmer dan technology enthusiast di balik RizzDev. Ia mengeksplorasi pemrograman, software, sistem komputer, dan teknologi melalui proyek personal.">
     <meta name="author" content="Rizki Afandi">
     <meta name="google-site-verification" content="yGD8SBKJPDQsN-oI6lRXqUhbxpZfbNlunz5e5VP_x_c">
     <link rel="canonical" href="https://rizz-portfolio.vercel.app/">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "ProfilePage",
-        "name": "Rizki Afandi Portfolio",
-        "url": "https://rizz-portfolio.vercel.app/",
-        "mainEntity": {
-            "@type": "Person",
-            "name": "Rizki Afandi",
-            "alternateName": ["Rizqi Afandi", "RizzDev"],
-            "jobTitle": "Junior Software Developer",
-            "url": "https://rizz-portfolio.vercel.app/",
-            "sameAs": [
-                "https://github.com/RIZKIIk",
-                "https://linkedin.com/in/rizqi-afandi-603355381"
-            ]
-        }
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://rizz-portfolio.vercel.app/#website",
+                "url": "https://rizz-portfolio.vercel.app/",
+                "name": "RizzDev",
+                "alternateName": "Rizki Afandi Portfolio",
+                "publisher": {"@id": "https://rizz-portfolio.vercel.app/#person"}
+            },
+            {
+                "@type": "Person",
+                "@id": "https://rizz-portfolio.vercel.app/#person",
+                "name": "Rizki Afandi",
+                "givenName": "Rizki",
+                "familyName": "Afandi",
+                "alternateName": ["Rizqi Afandi", "RizzDev"],
+                "jobTitle": "Programmer & Technology Enthusiast",
+                "description": "Programmer dan technology enthusiast yang mengeksplorasi pemrograman, software, sistem komputer, dan teknologi baru melalui proyek personal.",
+                "url": "https://rizz-portfolio.vercel.app/",
+                "image": "https://rizz-portfolio.vercel.app/media/me.jpg",
+                "sameAs": [
+                    "https://github.com/RIZKIIk",
+                    "https://www.linkedin.com/in/rizqi-afandi-603355381",
+                    "https://instagram.com/rizz_xyz10"
+                ]
+            },
+            {
+                "@type": "ProfilePage",
+                "@id": "https://rizz-portfolio.vercel.app/#profilepage",
+                "name": "Rizki Afandi | Programmer & Technology Enthusiast | RizzDev",
+                "url": "https://rizz-portfolio.vercel.app/",
+                "isPartOf": {"@id": "https://rizz-portfolio.vercel.app/#website"},
+                "mainEntity": {"@id": "https://rizz-portfolio.vercel.app/#person"}
+            }
+        ]
     }
     </script>
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://rizz-portfolio.vercel.app/">
-    <meta property="og:title" content="Rizki Afandi | Portofolio Web Developer">
-    <meta property="og:description" content="Portofolio Rizki Afandi: proyek web, frontend, dan desain UI/UX.">
-    <meta property="og:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
+    <meta property="og:site_name" content="RizzDev">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:title" content="Rizki Afandi | Programmer &amp; Technology Enthusiast | RizzDev">
+    <meta property="og:description" content="Rizki Afandi adalah programmer dan technology enthusiast di balik RizzDev. Ia mengeksplorasi pemrograman, software, sistem komputer, dan teknologi melalui proyek personal.">
+    <meta property="og:image" content="https://rizz-portfolio.vercel.app/media/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rizki Afandi — Programmer &amp; Technology Enthusiast, RizzDev">
     <meta name="theme-color" content="#07111a">
 
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Rizki Afandi | Portofolio Web Developer">
-    <meta name="twitter:description" content="Portofolio Rizki Afandi: proyek web, frontend, dan desain UI/UX.">
-    <meta name="twitter:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
-    <meta name="twitter:creator" content="@RIZKIIk">
+    <meta name="twitter:title" content="Rizki Afandi | Programmer &amp; Technology Enthusiast | RizzDev">
+    <meta name="twitter:description" content="Rizki Afandi adalah programmer dan technology enthusiast di balik RizzDev. Ia mengeksplorasi pemrograman, software, sistem komputer, dan teknologi melalui proyek personal.">
+    <meta name="twitter:image" content="https://rizz-portfolio.vercel.app/media/og-image.jpg">
+    <meta name="twitter:image:alt" content="Rizki Afandi — Programmer &amp; Technology Enthusiast, RizzDev">
 
     <!-- Favicon -->
     <link rel="icon" href="media/favicon.jpg" type="image/jpeg">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="motion.css">
+    <link rel="stylesheet" href="theme-controls.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css">
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,6 +89,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <script src="scripts/core/theme-bootstrap.js"></script>
     <!-- ============================================================================ -->
     <!-- BODY SECTION: Konten Utama Website -->
     <!-- ============================================================================ -->
@@ -100,9 +128,24 @@
                 <li><a href="#services">Layanan</a></li>
                 <li><a href="#contact">Kontak</a></li>
             </ul>
-            <button id="theme-toggle" class="theme-btn" aria-label="Tema warna" type="button" aria-pressed="false">
-                <i class="fas fa-moon"></i>
-            </button>
+            <div class="theme-picker" data-theme-picker>
+                <button id="theme-toggle" class="theme-btn theme-icon-button" type="button" aria-label="Beralih tema" aria-pressed="false">
+                    <span class="theme-icon-stage" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" data-theme-icon="light" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+                        <svg viewBox="0 0 24 24" data-theme-icon="dark" aria-hidden="true"><path d="M20.8 15.6A8.7 8.7 0 0 1 8.4 3.2 8.8 8.8 0 1 0 20.8 15.6Z"></path></svg>
+                        <svg viewBox="0 0 24 24" data-theme-icon="system" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12.5" rx="2"></rect><path d="M8 21h8m-4-4v4"></path></svg>
+                    </span>
+                </button>
+                <button id="theme-menu-toggle" class="theme-menu-toggle" type="button" aria-label="Pilih tema" aria-controls="theme-menu" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                </button>
+                <div id="theme-menu" class="theme-menu" role="group" aria-label="Pilihan tema" hidden>
+                    <span class="theme-menu-title">Tampilan</span>
+                    <button class="theme-option" type="button" data-theme-choice="system" aria-pressed="false"><svg class="theme-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12.5" rx="2"></rect><path d="M8 21h8m-4-4v4"></path></svg><span>Sesuai perangkat</span><svg class="theme-option-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button>
+                    <button class="theme-option" type="button" data-theme-choice="light" aria-pressed="false"><svg class="theme-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2"></path></svg><span>Terang</span><svg class="theme-option-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button>
+                    <button class="theme-option" type="button" data-theme-choice="dark" aria-pressed="false"><svg class="theme-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 15.6A8.7 8.7 0 0 1 8.4 3.2 8.8 8.8 0 1 0 20.8 15.6Z"></path></svg><span>Gelap</span><svg class="theme-option-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button>
+                </div>
+            </div>
             <button class="menu-toggle" aria-label="Buka menu" aria-controls="nav-links" aria-expanded="false" type="button">
                 <i class="fas fa-bars"></i>
             </button>
@@ -121,17 +164,17 @@
         <div class="container hero-flex">
             <div class="hero-text-wrapper reveal-left">
                 <div class="hero-text">
-                    <p class="greeting reveal-top">Halo, saya... </p>
-                    <h1 class="hero-name"><span id="typing-text" aria-hidden="true">Rizki Afandi</span><span class="cursor" aria-hidden="true">|</span><span class="sr-only">Rizki Afandi, Web Developer</span></h1>
-                    <p class="description">Saya membangun pengalaman web yang modern, rapi, dan fokus pada kebutuhan pengguna. Saya juga dikenal sebagai Rizqi Afandi dan RizzDev saat membagikan project frontend serta UI/UX.</p>
+                    <p class="greeting">welcome to RizzDev, saya...</p>
+                    <h1 class="hero-name"><span id="typing-text" aria-hidden="true">Rizki Afandi</span><span class="cursor" aria-hidden="true">|</span><span class="sr-only">Rizki Afandi, Web Developer, Programmer, dan Technology Enthusiast</span></h1>
+                    <p class="description">Saya dikenal sebagai RizzDev dan Rizqi Afandi. Saya senang membangun program dan website yang modern, rapi, serta berfokus pada pengguna, sambil terus mempelajari pemrograman dan teknologi lewat proyek personal.</p>
                     <div class="hero-highlights reveal-bottom">
                         <div class="stat-card">
                             <strong>3</strong>
                             <span>Proyek unggulan</span>
                         </div>
                         <div class="stat-card">
-                            <strong>5</strong>
-                            <span>Keahlian yang ditampilkan</span>
+                            <strong>12</strong>
+                            <span>Teknologi &amp; tools</span>
                         </div>
                         <div class="stat-card">
                             <strong>2025</strong>
@@ -146,14 +189,14 @@
                     <p id="share-status" class="share-status" aria-live="polite"></p>
                     <div class="hero-socials reveal-bottom">
                         <a href="https://github.com/RIZKIIk" target="_blank" rel="noopener noreferrer" aria-label="GitHub Rizki Afandi" title="GitHub Rizki Afandi"><i class="fab fa-github"></i></a>
-                        <a href="https://linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Rizki Afandi" title="LinkedIn Rizki Afandi"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Rizki Afandi" title="LinkedIn Rizki Afandi"><i class="fab fa-linkedin"></i></a>
                         <a href="mailto:diazggs321@gmail.com" aria-label="Kirim email ke Rizki Afandi" title="Kirim email ke Rizki Afandi"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
             </div>
             <div class="hero-image reveal-right">
             <div class="photo-frame">
-                <img id="profile-image" src="media/me.jpg" alt="Rizki Afandi" data-fallback="media/me.jpg">
+                <img id="profile-image" src="media/me.jpg" alt="Rizki Afandi" width="1143" height="1200" fetchpriority="high" data-fallback="media/me.jpg">
                 </div>
             </div>
         </div>
@@ -167,22 +210,22 @@
             <h2 class="section-title reveal-left">Tentang Saya</h2>
             <div class="about-content reveal-bottom">
                 <div class="about-text">
-                    <p>Halo! Saya Rizki, siswa SMK jurusan Rekayasa Perangkat Lunak yang antusias mengembangkan teknologi dan inovasi digital. Saya tertarik pada <strong>pengembangan perangkat lunak</strong>, <strong>desain UI/UX</strong>, dan <strong>pemecahan masalah</strong>.</p>
-                    <p>Selama masa sekolah, saya mengerjakan berbagai proyek dan tantangan teknis, dari algoritma dasar hingga aplikasi yang lebih kompleks. Saya percaya solusi yang baik dibangun dengan logika yang kuat, desain yang nyaman, dan perhatian pada kebutuhan pengguna.</p>
+                    <p>Halo! Saya Rizki, <strong>siswa Rekayasa Perangkat Lunak</strong> yang senang belajar pemrograman dan mengembangkan ide menjadi sebuah proyek. Melalui <strong>RizzDev</strong>, saya membagikan karya dan proses belajar di bidang teknologi.</p>
+                    <p>Saat ini saya mempraktikkan <strong>pengembangan web/aplikasi, programming, desain UI/UX, dan pemecahan masalah</strong>. Saya juga tertarik mempelajari software, sistem komputer, basis data, kecerdasan buatan, keamanan siber, dan teknologi baru sebagai bagian dari proses belajar.</p>
                     <div class="about-highlights">
                         <div class="fact-card">
                             <h3>Fokus utama</h3>
-                            <p>Frontend, desain antarmuka, dan pengalaman pengguna yang mudah dipahami.</p>
+                            <p>Mengembangkan program, website, atau aplikasi dengan struktur yang jelas dan berorientasi pada pengguna.</p>
                         </div>
                        
                         <div class="fact-card">
                             <h3>Tujuan</h3>
-                            <p>Membangun produk web yang elegan, cepat, dan bermanfaat bagi banyak orang.</p>
+                            <p>Terus belajar sambil membangun karya digital yang elegan, cepat, dan bermanfaat.</p>
                         </div>
                     </div>
                     <div class="about-info">
                         <span><strong>Lokasi:</strong> Indonesia</span>
-                        <span><strong>Pendidikan:</strong> SMK Rekayasa Perangkat Lunak</span>
+                        <span><strong>Pendidikan:</strong> Rekayasa Perangkat Lunak</span>
                     </div>
                 </div>
             </div>
@@ -190,36 +233,91 @@
     </section>
 
     <!-- Skills Section -->
-    <!-- Daftar keahlian Anda dengan progress bar visual -->
+    <!-- Teknologi dan tools yang digunakan -->
     <!-- Skills Section -->
     <section id="skills" class="section">
         <div class="container">
             <h2 class="section-title reveal-left">Keahlian</h2>
+            <p class="section-lead reveal-bottom">Pilih teknologi atau tools untuk melihat penjelasan singkatnya.</p>
             <div class="skills-grid">
-                <div class="skill-card reveal-bottom">
-                    <i class="fab fa-html5"></i>
-                    <span class="skill-name">HTML</span>
-                    <div class="skill-meter"><span class="skill-percent">85%</span><div class="progress-bar-container" role="progressbar" aria-label="HTML" aria-valuemin="0" aria-valuemax="100" aria-valuenow="85"><div class="progress-bar" data-progress="85"></div></div></div>
-                </div>
-                <div class="skill-card reveal-bottom">
-                    <i class="fab fa-css3-alt"></i>
-                    <span class="skill-name">CSS</span>
-                    <div class="skill-meter"><span class="skill-percent">80%</span><div class="progress-bar-container" role="progressbar" aria-label="CSS" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80"><div class="progress-bar" data-progress="80"></div></div></div>
-                </div>
-                <div class="skill-card reveal-bottom">
-                    <i class="fab fa-js"></i>
-                    <span class="skill-name">JavaScript</span>
-                    <div class="skill-meter"><span class="skill-percent">75%</span><div class="progress-bar-container" role="progressbar" aria-label="JavaScript" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"><div class="progress-bar" data-progress="75"></div></div></div>
-                </div>
-                <div class="skill-card reveal-bottom">
-                    <i class="fab fa-python"></i>
-                    <span class="skill-name">Python</span>
-                    <div class="skill-meter"><span class="skill-percent">90%</span><div class="progress-bar-container" role="progressbar" aria-label="Python" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90"><div class="progress-bar" data-progress="90"></div></div></div>
-                </div>
-                <div class="skill-card reveal-bottom">
-                    <i class="fab fa-php"></i>
-                    <span class="skill-name">PHP</span>
-                    <div class="skill-meter"><span class="skill-percent">60%</span><div class="progress-bar-container" role="progressbar" aria-label="PHP" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"><div class="progress-bar" data-progress="60"></div></div></div>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-html">
+                        <span class="skill-card-main"><i class="skill-icon devicon-html5-plain colored" aria-hidden="true"></i><span class="skill-name">HTML</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-html"><div class="skill-detail-content">HTML adalah bahasa markup, bukan bahasa pemrograman, untuk menyusun struktur dan konten halaman web.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-css">
+                        <span class="skill-card-main"><i class="skill-icon devicon-css3-plain colored" aria-hidden="true"></i><span class="skill-name">CSS</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-css"><div class="skill-detail-content">CSS adalah bahasa stylesheet untuk mengatur tampilan, warna, tata letak, dan responsivitas halaman web.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-javascript">
+                        <span class="skill-card-main"><i class="skill-icon devicon-javascript-plain colored" aria-hidden="true"></i><span class="skill-name">JavaScript</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-javascript"><div class="skill-detail-content">JavaScript adalah bahasa pemrograman yang membuat halaman web interaktif dan menjalankan logika aplikasi.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-rust">
+                        <span class="skill-card-main"><i class="skill-icon devicon-rust-plain colored" aria-hidden="true"></i><span class="skill-name">Rust</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-rust"><div class="skill-detail-content">Rust adalah bahasa pemrograman sistem yang dirancang untuk performa tinggi dan keamanan memori.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-postman">
+                        <span class="skill-card-main"><i class="skill-icon devicon-postman-plain colored" aria-hidden="true"></i><span class="skill-name">Postman</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-postman"><div class="skill-detail-content">Postman membantu membuat, mengirim, dan menguji permintaan ke API.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-postgresql">
+                        <span class="skill-card-main"><i class="skill-icon devicon-postgresql-plain colored" aria-hidden="true"></i><span class="skill-name">PostgreSQL</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-postgresql"><div class="skill-detail-content">PostgreSQL adalah sistem basis data relasional untuk menyimpan dan mengolah data dengan SQL.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-rest-api">
+                        <span class="skill-card-main"><i class="skill-icon fas fa-code" aria-hidden="true"></i><span class="skill-name">REST API</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-rest-api"><div class="skill-detail-content">REST API adalah pola antarmuka yang memungkinkan aplikasi bertukar data melalui permintaan HTTP.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-mysql">
+                        <span class="skill-card-main"><i class="skill-icon devicon-mysql-plain colored" aria-hidden="true"></i><span class="skill-name">MySQL</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-mysql"><div class="skill-detail-content">MySQL adalah sistem basis data relasional yang digunakan untuk menyimpan dan mencari data.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-supabase">
+                        <span class="skill-card-main"><i class="skill-icon devicon-supabase-plain colored" aria-hidden="true"></i><span class="skill-name">Supabase</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-supabase"><div class="skill-detail-content">Supabase menyediakan layanan backend seperti basis data, autentikasi, dan penyimpanan file.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-nodejs">
+                        <span class="skill-card-main"><i class="skill-icon devicon-nodejs-plain colored" aria-hidden="true"></i><span class="skill-name">Node.js</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-nodejs"><div class="skill-detail-content">Node.js adalah runtime untuk menjalankan JavaScript di luar browser.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-python">
+                        <span class="skill-card-main"><i class="skill-icon devicon-python-plain colored" aria-hidden="true"></i><span class="skill-name">Python</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-python"><div class="skill-detail-content">Python adalah bahasa pemrograman serbaguna yang digunakan untuk otomasi, data, web, dan banyak kebutuhan lain.</div></div>
+                </details>
+                <details class="skill-card skill-detail-card reveal-bottom" name="technology-skills">
+                    <summary class="skill-trigger" aria-controls="skill-detail-php">
+                        <span class="skill-card-main"><i class="skill-icon devicon-php-plain colored" aria-hidden="true"></i><span class="skill-name">PHP</span><span class="skill-expand-icon" aria-hidden="true"><i class="fas fa-chevron-down"></i></span></span>
+                    </summary>
+                    <div class="skill-detail" id="skill-detail-php"><div class="skill-detail-content">PHP adalah bahasa pemrograman yang banyak digunakan untuk membangun sisi server aplikasi web.</div></div>
+                </details>
+                <div class="skill-card skill-card-adaptive reveal-bottom">
+                    <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                    <div class="skill-adaptive-copy">
+                        <span class="skill-name">Adaptif &amp; terus belajar</span>
+                        <span class="skill-description">Mampu mempelajari dan beradaptasi dengan bahasa pemrograman serta teknologi baru.</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,11 +329,12 @@
     <section id="projects" class="section">
         <div class="container">
             <h2 class="section-title reveal-left">Proyek Terpilih</h2>
+            <p class="section-lead reveal-bottom">Pilihan karya dari proses belajar, eksplorasi, dan praktik teknologi.</p>
             <div class="projects-grid">
                 <!-- Project 1 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="media/projects/movie-app.svg" alt="Pratinjau aplikasi katalog film" loading="lazy" decoding="async">
+                        <img src="media/project-previews/movie-database.svg" alt="Pratinjau antarmuka katalog film" loading="lazy" decoding="async">
                     </div>
                     <div class="project-info">
                         <h3>Movie Database App</h3>
@@ -252,7 +351,7 @@
                 <!-- Project 2 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="media/projects/portfolio.svg" alt="Pratinjau website portfolio" loading="lazy" decoding="async">
+                        <img src="media/project-previews/portfolio.svg" alt="Pratinjau antarmuka website portfolio" loading="lazy" decoding="async">
                     </div>
                     <div class="project-info">
                         <h3>Website Portfolio</h3>
@@ -268,7 +367,7 @@
                 <!-- Project 3 -->
                 <div class="project-card reveal-bottom">
                     <div class="project-img">
-                        <img src="media/projects/money-tracker.svg" alt="Pratinjau aplikasi pencatat keuangan" loading="lazy" decoding="async">
+                        <img src="media/project-previews/money-tracker.svg" alt="Pratinjau antarmuka aplikasi pencatat keuangan" loading="lazy" decoding="async">
                     </div>
                     <div class="project-info">
                         <h3>Money Tracker</h3>
@@ -327,7 +426,7 @@
     <section id="contact" class="section">
         <div class="container">
             <h2 class="section-title reveal-left">Mari Berdiskusi</h2>
-            <p class="contact-intro reveal-bottom">Saya terbuka untuk proyek, diskusi ide, maupun kesempatan kolaborasi. Jika Anda ingin website yang modern dan fungsional, jangan ragu menghubungi saya.</p>
+            <p class="contact-intro reveal-bottom">Saya terbuka untuk proyek, diskusi ide, maupun kesempatan kolaborasi. Jika Anda ingin aplikasi/website yang modern dan fungsional, jangan ragu menghubungi saya.</p>
             <form id="contact-form" class="contact-form reveal-bottom">
                 <div class="form-group">
                     <label for="name">Nama lengkap</label>
@@ -384,6 +483,7 @@
     </footer>
 
     <script src="portfolio-config.js"></script>
+    <script src="scripts/features/theme-controls.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -29,9 +29,15 @@ body {
     sans-serif;
 }
 .admin-shell {
+  position: relative;
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
   padding: 56px 0 80px;
+}
+.admin-shell > .theme-picker {
+  position: absolute;
+  top: 8px;
+  right: 0;
 }
 h1,
 h2,

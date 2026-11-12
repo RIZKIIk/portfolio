@@ -1,49 +1,87 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Curriculum Vitae Rizki Afandi, Junior Software Developer dengan fokus pada frontend development dan UI/UX.">
+  <meta name="description" content="CV Rizki Afandi, programmer dan technology enthusiast di RizzDev. Lihat pendidikan, keahlian yang dipraktikkan, dan proyek personalnya.">
   <meta name="theme-color" content="#050816">
   <link rel="canonical" href="https://rizz-portfolio.vercel.app/cv/cv.html">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Rizki Afandi",
-    "jobTitle": "Junior Software Developer",
-    "url": "https://rizz-portfolio.vercel.app/cv/cv.html",
-    "sameAs": [
-      "https://github.com/RIZKIIk",
-      "https://linkedin.com/in/rizqi-afandi-603355381"
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://rizz-portfolio.vercel.app/#person",
+        "name": "Rizki Afandi",
+        "givenName": "Rizki",
+        "familyName": "Afandi",
+        "alternateName": ["Rizqi Afandi", "RizzDev"],
+        "jobTitle": "Programmer & Technology Enthusiast",
+        "description": "Programmer dan technology enthusiast yang mengeksplorasi pemrograman, software, sistem komputer, dan teknologi baru melalui proyek personal.",
+        "url": "https://rizz-portfolio.vercel.app/",
+        "image": "https://rizz-portfolio.vercel.app/media/me.jpg",
+        "sameAs": [
+          "https://github.com/RIZKIIk",
+          "https://www.linkedin.com/in/rizqi-afandi-603355381",
+          "https://instagram.com/rizz_xyz10"
+        ]
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": "https://rizz-portfolio.vercel.app/cv/cv.html#profilepage",
+        "name": "CV Rizki Afandi | Programmer & Technology Enthusiast | RizzDev",
+        "url": "https://rizz-portfolio.vercel.app/cv/cv.html",
+        "isPartOf": {"@id": "https://rizz-portfolio.vercel.app/#website"},
+        "mainEntity": {"@id": "https://rizz-portfolio.vercel.app/#person"}
+      }
     ]
   }
   </script>
   <meta property="og:type" content="profile">
   <meta property="og:url" content="https://rizz-portfolio.vercel.app/cv/cv.html">
-  <meta property="og:title" content="Rizki Afandi | Curriculum Vitae">
-  <meta property="og:description" content="CV Rizki Afandi, Junior Software Developer dengan fokus pada frontend development dan UI/UX.">
-  <meta property="og:image" content="https://rizz-portfolio.vercel.app/media/me.jpg">
-  <title>Rizki Afandi | Curriculum Vitae</title>
+  <meta property="og:site_name" content="RizzDev">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:title" content="CV Rizki Afandi | Programmer &amp; Technology Enthusiast | RizzDev">
+  <meta property="og:description" content="CV Rizki Afandi, programmer dan technology enthusiast di RizzDev. Lihat pendidikan, keahlian yang dipraktikkan, dan proyek personalnya.">
+  <meta property="og:image" content="https://rizz-portfolio.vercel.app/media/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Rizki Afandi — Programmer &amp; Technology Enthusiast, RizzDev">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CV Rizki Afandi | Programmer &amp; Technology Enthusiast | RizzDev">
+  <meta name="twitter:description" content="CV Rizki Afandi, programmer dan technology enthusiast di RizzDev. Lihat pendidikan, keahlian yang dipraktikkan, dan proyek personalnya.">
+  <meta name="twitter:image" content="https://rizz-portfolio.vercel.app/media/og-image.jpg">
+  <meta name="twitter:image:alt" content="Rizki Afandi — Programmer &amp; Technology Enthusiast, RizzDev">
+  <title>Rizki Afandi | Curriculum Vitae | RizzDev</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="cv.css">
   <link rel="stylesheet" href="../motion.css">
+  <link rel="stylesheet" href="../theme-controls.css">
 </head>
 <body>
+  <script src="../scripts/core/theme-bootstrap.js"></script>
   <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
   <div class="page-shell">
     <header class="topbar no-print">
       <a href="../index.html" class="btn btn-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i> Kembali ke Portofolio</a>
       <div class="toolbar">
         <button type="button" id="print-cv" class="btn btn-primary"><i class="fas fa-print" aria-hidden="true"></i> Simpan / Cetak PDF</button>
-        <label class="theme-control">
-          <span class="theme-label">Tema</span>
-          <input id="theme-toggle" type="checkbox" role="switch" aria-label="Gunakan tema gelap">
-          <span class="theme-switch" aria-hidden="true"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></span>
-        </label>
+        <div class="theme-picker" data-theme-picker>
+          <button id="theme-toggle" class="theme-btn theme-icon-button" type="button" aria-label="Beralih tema" aria-pressed="false">
+            <span class="theme-icon-stage" aria-hidden="true"><svg viewBox="0 0 24 24" data-theme-icon="light" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg><svg viewBox="0 0 24 24" data-theme-icon="dark" aria-hidden="true"><path d="M20.8 15.6A8.7 8.7 0 0 1 8.4 3.2 8.8 8.8 0 1 0 20.8 15.6Z"></path></svg><svg viewBox="0 0 24 24" data-theme-icon="system" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12.5" rx="2"></rect><path d="M8 21h8m-4-4v4"></path></svg></span>
+          </button>
+          <button id="theme-menu-toggle" class="theme-menu-toggle" type="button" aria-label="Pilih tema" aria-controls="theme-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+          <div id="theme-menu" class="theme-menu" role="group" aria-label="Pilihan tema" hidden>
+            <span class="theme-menu-title">Tampilan</span>
+            <button class="theme-option" type="button" data-theme-choice="system" aria-pressed="false"><svg class="theme-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12.5" rx="2"></rect><path d="M8 21h8m-4-4v4"></path></svg><span>Sesuai perangkat</span><svg class="theme-option-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button>
+            <button class="theme-option" type="button" data-theme-choice="light" aria-pressed="false"><svg class="theme-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2"></path></svg><span>Terang</span><svg class="theme-option-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button>
+            <button class="theme-option" type="button" data-theme-choice="dark" aria-pressed="false"><svg class="theme-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 15.6A8.7 8.7 0 0 1 8.4 3.2 8.8 8.8 0 1 0 20.8 15.6Z"></path></svg><span>Gelap</span><svg class="theme-option-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -51,9 +89,9 @@
       <aside class="sidebar">
         <a href="../index.html" class="brand">Rizz<span>Dev</span></a>
         <div class="profile">
-          <img src="../media/me.jpg" alt="Foto Rizki Afandi" class="profile-image" data-fallback="../media/foto.jpg">
+          <img src="../media/me.jpg" alt="Foto Rizki Afandi" width="1143" height="1200" fetchpriority="high" class="profile-image" data-fallback="../media/foto.jpg">
           <h1>Rizki Afandi</h1>
-          <p class="role"><i class="fas fa-code" aria-hidden="true"></i> Junior Software Developer</p>
+          <p class="role"><i class="fas fa-code" aria-hidden="true"></i> Programmer &amp; Technology Enthusiast</p>
         </div>
 
         <section class="side-section" aria-labelledby="contact-title">
@@ -63,7 +101,7 @@
             <a href="tel:+6285649507734"><i class="fas fa-phone" aria-hidden="true"></i><span>+62 856 4950 7734</span></a>
             <span><i class="fas fa-location-dot" aria-hidden="true"></i><span>Indonesia</span></span>
             <a href="https://github.com/RIZKIIk" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i><span>github.com/RIZKIIk</span></a>
-            <a href="https://linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin" aria-hidden="true"></i><span>linkedin.com/in/rizqi-afandi-603355381</span></a>
+            <a href="https://www.linkedin.com/in/rizqi-afandi-603355381" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin" aria-hidden="true"></i><span>linkedin.com/in/rizqi-afandi-603355381</span></a>
           </div>
         </section>
 
@@ -91,7 +129,7 @@
 
       <div class="main-content">
         <section class="intro-grid" aria-label="Ringkasan profesional">
-          <article class="panel intro-panel"><p class="eyebrow">Profil profesional</p><h2>Membangun web yang rapi, responsif, dan mudah digunakan.</h2><p>Saya adalah siswa SMK Rekayasa Perangkat Lunak yang fokus pada pengembangan web, antarmuka yang bersih, dan pengalaman pengguna yang nyaman. Saya terbiasa membangun solusi digital yang fungsional, responsif, dan rapi dari sisi struktur kode maupun tampilan.</p></article>
+          <article class="panel intro-panel"><p class="eyebrow">Profil</p><h2>Programmer &amp; Technology Enthusiast di balik RizzDev.</h2><p>Saya Rizki Afandi, siswa SMK Rekayasa Perangkat Lunak yang terus belajar melalui proyek personal. Web development dan frontend adalah bidang yang saya praktikkan; minat belajar saya juga mencakup software, sistem komputer, basis data, dan perkembangan teknologi.</p></article>
           <div class="stats-grid">
             <article class="stat"><span>Fokus</span><strong>Frontend</strong><p>Tampilan modern dan responsif.</p></article>
             <article class="stat"><span>Gaya kerja</span><strong>Rapi</strong><p>Struktur jelas dan stabil.</p></article>
@@ -124,8 +162,8 @@
       </div>
     </main>
   </div>
-  <script src="cv.js"></script>
   <script src="../portfolio-config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="../scripts/features/theme-controls.js"></script>
+  <script type="module" src="cv.js"></script>
 </body>
 </html>

@@ -127,13 +127,11 @@ button {
 .btn:hover {
   transform: translateY(-2px);
 }
-.btn:focus-visible,
-.theme-control:focus-within {
+.btn:focus-visible {
   outline: 3px solid var(--glow);
   outline-offset: 3px;
 }
-.btn-secondary,
-.theme-control {
+.btn-secondary {
   background: var(--surface-soft);
   color: var(--text);
   border-color: var(--line);
@@ -142,37 +140,6 @@ button {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
   color: var(--bg);
-}
-.theme-control {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  font-size: 13px;
-  font-weight: 800;
-}
-.theme-control input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.theme-switch {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--soft);
-}
-.theme-switch i {
-  font-size: 12px;
-}
-.theme-control input:checked + .theme-switch {
-  color: var(--primary);
-  background: rgba(52, 211, 153, 0.14);
 }
 .cv-page {
   display: grid;
@@ -567,8 +534,10 @@ html[data-theme="light"] .main-content {
     align-items: stretch;
     flex-direction: column;
   }
-  .btn,
-  .theme-control {
+  .toolbar .theme-picker {
+    align-self: flex-end;
+  }
+  .btn {
     width: 100%;
     justify-content: center;
   }

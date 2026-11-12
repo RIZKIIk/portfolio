@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="18" y1="0" x2="1182" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1c1639"/>
+      <stop offset="1" stop-color="#10182e"/>
+    </linearGradient>
+    <linearGradient id="balance" x1="225" y1="184" x2="588" y2="375" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8e77f6"/>
+      <stop offset="1" stop-color="#4f7de8"/>
+    </linearGradient>
+    <linearGradient id="chart" x1="607" y1="433" x2="1103" y2="299" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#64e1bf"/>
+      <stop offset="1" stop-color="#8b9bff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" rx="32" fill="url(#bg)"/>
+  <rect x="34" y="32" width="1132" height="686" rx="24" fill="#111a32" stroke="#ffffff" stroke-opacity=".12"/>
+  <path d="M58 32h1084a24 24 0 0 1 24 24v70H34V56a24 24 0 0 1 24-24Z" fill="#171f3a"/>
+  <circle cx="62" cy="72" r="7" fill="#ff7583"/>
+  <circle cx="88" cy="72" r="7" fill="#ffd06e"/>
+  <circle cx="114" cy="72" r="7" fill="#58ddbd"/>
+  <rect x="65" y="153" width="205" height="542" rx="18" fill="#171f3a"/>
+  <circle cx="108" cy="198" r="22" fill="#7562e8"/>
+  <path d="M108 185v26m-9-18h13a6 6 0 0 1 0 12H102" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="143" y="204" fill="#f3f4ff" font-family="Arial,sans-serif" font-size="17" font-weight="700">Saku</text>
+  <text x="91" y="272" fill="#9ba6c2" font-family="Arial,sans-serif" font-size="13">OVERVIEW</text>
+  <rect x="80" y="290" width="175" height="42" rx="12" fill="#403b73" fill-opacity=".64"/>
+  <circle cx="101" cy="311" r="6" fill="#afa1ff"/>
+  <text x="118" y="316" fill="#eeeaff" font-family="Arial,sans-serif" font-size="13" font-weight="700">Dashboard</text>
+  <circle cx="101" cy="365" r="6" fill="#7887a7"/>
+  <text x="118" y="370" fill="#a9b2ca" font-family="Arial,sans-serif" font-size="13">Transactions</text>
+  <circle cx="101" cy="419" r="6" fill="#7887a7"/>
+  <text x="118" y="424" fill="#a9b2ca" font-family="Arial,sans-serif" font-size="13">Categories</text>
+  <circle cx="101" cy="473" r="6" fill="#7887a7"/>
+  <text x="118" y="478" fill="#a9b2ca" font-family="Arial,sans-serif" font-size="13">Reports</text>
+  <text x="317" y="186" fill="#f3f4ff" font-family="Arial,sans-serif" font-size="26" font-weight="700">Good morning</text>
+  <text x="318" y="216" fill="#939fbb" font-family="Arial,sans-serif" font-size="14">Here’s your money overview.</text>
+  <rect x="317" y="246" width="390" height="172" rx="20" fill="url(#balance)"/>
+  <circle cx="670" cy="287" r="63" fill="#fff" fill-opacity=".07"/>
+  <circle cx="705" cy="390" r="82" fill="#fff" fill-opacity=".045"/>
+  <text x="346" y="292" fill="#e4e0ff" font-family="Arial,sans-serif" font-size="14">TOTAL BALANCE</text>
+  <text x="345" y="342" fill="#fff" font-family="Arial,sans-serif" font-size="35" font-weight="700">Rp •••••••</text>
+  <text x="347" y="386" fill="#e0e4ff" font-family="Arial,sans-serif" font-size="13">Monthly overview</text>
+  <rect x="728" y="246" width="365" height="172" rx="20" fill="#1b2644" stroke="#fff" stroke-opacity=".08"/>
+  <circle cx="775" cy="292" r="19" fill="#28b88f" fill-opacity=".16"/>
+  <path d="M775 302v-20m-7 7 7-7 7 7" stroke="#55dfb3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="808" y="289" fill="#a6b1ca" font-family="Arial,sans-serif" font-size="13">INCOME</text>
+  <text x="808" y="321" fill="#f5f6ff" font-family="Arial,sans-serif" font-size="22" font-weight="700">Rp •••••••</text>
+  <circle cx="775" cy="365" r="19" fill="#ff7d9b" fill-opacity=".15"/>
+  <path d="M775 355v20m-7-7 7 7 7-7" stroke="#ff8ea7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="808" y="362" fill="#a6b1ca" font-family="Arial,sans-serif" font-size="13">EXPENSES</text>
+  <text x="808" y="394" fill="#f5f6ff" font-family="Arial,sans-serif" font-size="22" font-weight="700">Rp •••••••</text>
+  <rect x="317" y="442" width="776" height="236" rx="20" fill="#1b2644" stroke="#fff" stroke-opacity=".08"/>
+  <text x="344" y="480" fill="#f3f4ff" font-family="Arial,sans-serif" font-size="16" font-weight="700">Cash flow</text>
+  <text x="344" y="502" fill="#8e9ab6" font-family="Arial,sans-serif" font-size="12">Income and expenses over time</text>
+  <path d="M345 622h716M345 582h716M345 542h716" stroke="#aab6d1" stroke-opacity=".12" stroke-dasharray="5 8"/>
+  <path d="M351 604c50-8 53-42 101-36 52 7 55 32 99 5s54-59 101-42 56 24 100-2 59-27 101-8 58-25 100-37 60 21 102-15" stroke="url(#chart)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M351 624c50-8 53-27 101-23 52 4 55 20 99 0s54-38 101-29 56 19 100 5 59-18 101-8 58-20 100-23 60 10 102-2" stroke="#ef8bb1" stroke-opacity=".75" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 8"/>
+  <circle cx="852" cy="521" r="5" fill="#7be6c5"/>
+  <text x="872" y="526" fill="#aab6d1" font-family="Arial,sans-serif" font-size="11">Income</text>
+  <circle cx="950" cy="521" r="5" fill="#ef8bb1"/>
+  <text x="970" y="526" fill="#aab6d1" font-family="Arial,sans-serif" font-size="11">Expense</text>
+</svg>

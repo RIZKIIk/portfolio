@@ -1,9 +1,9 @@
-// Animate the short role/name phrases without changing the accessible static heading.
+// Animate the name and roles in the hero while keeping accessible text stable.
 export function initializeHeroTyping() {
     const typingText = document.getElementById('typing-text');
     if (!typingText || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const phrases = ['Rizki Afandi', 'Web Developer', 'Siswa RPL', 'UI Designer'];
+    const phrases = ['Rizki Afandi', 'Web Developer', 'Programmer', 'Technology Enthusiast'];
     let phraseIndex = 0;
     let characterIndex = phrases[0].length;
     let isDeleting = true;

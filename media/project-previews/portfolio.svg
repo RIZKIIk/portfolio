@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="42" y1="0" x2="1158" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#071b1c"/>
+      <stop offset="1" stop-color="#0c1729"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="106" y1="544" x2="568" y2="242" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#55e0b2"/>
+      <stop offset="1" stop-color="#78a9ff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(266 286 -281 262 904 117)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3bd1a1" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#3bd1a1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="750" rx="32" fill="url(#bg)"/>
+  <circle cx="904" cy="117" r="360" fill="url(#glow)"/>
+  <circle cx="1010" cy="685" r="270" fill="#678dff" fill-opacity=".08"/>
+  <rect x="34" y="32" width="1132" height="686" rx="24" fill="#08131e" stroke="#d9fff4" stroke-opacity=".14"/>
+  <path d="M58 32h1084a24 24 0 0 1 24 24v48H34V56a24 24 0 0 1 24-24Z" fill="#0d1d2b"/>
+  <circle cx="62" cy="68" r="7" fill="#ff7583"/>
+  <circle cx="88" cy="68" r="7" fill="#ffd06e"/>
+  <circle cx="114" cy="68" r="7" fill="#55dfb3"/>
+  <text x="154" y="76" fill="#a9bac5" font-family="Arial,sans-serif" font-size="13">rizzdev — personal portfolio</text>
+  <text x="91" y="165" fill="#d6e4e2" font-family="Arial,sans-serif" font-size="17">HELLO, I’M RIZKI</text>
+  <text x="89" y="239" fill="#f2faf8" font-family="Arial,sans-serif" font-size="58" font-weight="700">Building ideas</text>
+  <text x="89" y="306" fill="#f2faf8" font-family="Arial,sans-serif" font-size="58" font-weight="700">into digital</text>
+  <text x="89" y="373" fill="url(#accent)" font-family="Arial,sans-serif" font-size="58" font-weight="700">experiences.</text>
+  <text x="93" y="427" fill="#9fb2b7" font-family="Arial,sans-serif" font-size="17">Thoughtful interfaces. Useful ideas. Built for people.</text>
+  <rect x="91" y="475" width="148" height="48" rx="24" fill="url(#accent)"/>
+  <text x="165" y="505" fill="#09201d" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">Explore work ↗</text>
+  <rect x="254" y="475" width="122" height="48" rx="24" fill="#102431" stroke="#d9fff4" stroke-opacity=".2"/>
+  <text x="315" y="505" fill="#d8e9e5" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">About me</text>
+  <circle cx="820" cy="382" r="203" fill="#102f32" stroke="#87e8c9" stroke-opacity=".5" stroke-width="2"/>
+  <circle cx="820" cy="382" r="177" fill="#152d3b"/>
+  <path d="M820 257v248m-124-124h248" stroke="#8ce5c5" stroke-opacity=".18" stroke-width="2" stroke-dasharray="8 10"/>
+  <rect x="712" y="295" width="216" height="174" rx="24" fill="#0b1924" stroke="#a6f0d9" stroke-opacity=".45"/>
+  <path d="m770 353-36 29 36 29m101-58 36 29-36 29m-22-78-30 98" stroke="url(#accent)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="891" y="190" width="168" height="43" rx="21.5" fill="#122c34" stroke="#a6f0d9" stroke-opacity=".2"/>
+  <circle cx="916" cy="211" r="6" fill="#55dfb3"/>
+  <text x="934" y="216" fill="#d5ece5" font-family="Arial,sans-serif" font-size="13">Curious by design</text>
+  <rect x="622" y="536" width="186" height="44" rx="22" fill="#172941" stroke="#c1d4ff" stroke-opacity=".18"/>
+  <text x="715" y="563" fill="#d4e1ff" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">Code · Learn · Repeat</text>
+  <text x="91" y="647" fill="#78908f" font-family="Arial,sans-serif" font-size="13">A responsive portfolio built with HTML, CSS and JavaScript</text>
+</svg>

@@ -9,7 +9,7 @@ export function createProjectCard(project) {
         .join('');
     const demoUrl = safeHttpUrl(project.demo_url);
     const githubUrl = safeHttpUrl(project.github_url);
-    const imageUrl = safeHttpUrl(project.image_url) || 'media/projects/portfolio.svg';
+    const imageUrl = safeHttpUrl(project.image_url) || 'media/project-previews/portfolio.svg';
     const demoLink = demoUrl
         ? `<a href="${escapeHtml(demoUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm">Lihat demo <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>`
         : '';
@@ -19,6 +19,6 @@ export function createProjectCard(project) {
 
     const card = document.createElement('article');
     card.className = 'project-card reveal-bottom active';
-    card.innerHTML = `<div class="project-img"><img src="${escapeHtml(imageUrl)}" alt="Gambar proyek ${title}" loading="lazy" decoding="async" data-fallback="media/projects/portfolio.svg"></div><div class="project-info"><h3>${title}</h3><p>${description}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div>`;
+    card.innerHTML = `<div class="project-img"><img src="${escapeHtml(imageUrl)}" alt="Gambar proyek ${title}" loading="lazy" decoding="async" data-fallback="media/project-previews/portfolio.svg"></div><div class="project-info"><h3>${title}</h3><p>${description}</p><div class="project-tags">${tags}</div><div class="project-links">${demoLink}${githubLink}</div></div>`;
     return card;
 }

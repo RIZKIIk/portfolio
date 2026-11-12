@@ -1,8 +1,12 @@
+import { createSupabaseClient } from '../scripts/services/supabase-client.js';
+import { createAdminRepository } from './scripts/services/admin-repository.js';
+import { optimizeImage, optimizeProfileImage, optimizeProjectThumbnail } from './scripts/services/image-processing.js';
+import { filterProjects, renderProjectList } from './scripts/features/project-list.js';
+
 (() => {
   const config = window.PORTFOLIO_CONFIG || {};
   const adminEmail = (config.adminEmail || '').trim().toLowerCase();
   const hasCredentials = Boolean(config.supabaseUrl && config.supabaseAnonKey && config.adminEmail);
-  const hasConfig = Boolean(hasCredentials && window.supabase);
   const setupNotice = document.querySelector('#setup-notice');
   const authView = document.querySelector('#auth-view');
   const dashboardView = document.querySelector('#dashboard-view');
@@ -57,6 +61,7 @@
   const maxStoredImageBytes = 3 * 1024 * 1024;
   let allProjects = [];
   let client;
+  let repository;
   let previewObjectUrl = '';
   const sitePreviewUrls = {};
 
@@ -115,95 +120,6 @@
     setStatus(imageUploadStatus, '');
   };
 
-  const optimizeImage = async (file) => {
-    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!acceptedTypes.includes(file.type)) throw new Error('Pilih gambar JPG, PNG, atau WebP.');
-    if (file.size > maxSourceImageBytes) throw new Error('Ukuran gambar maksimal 6 MB.');
-    if (!('createImageBitmap' in window)) throw new Error('Browser ini belum mendukung optimasi gambar. Coba browser versi terbaru.');
-
-    const bitmap = await createImageBitmap(file);
-    try {
-      if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 40000000) {
-        throw new Error('Dimensi gambar terlalu besar. Gunakan gambar di bawah 40 megapiksel.');
-      }
-      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-      const context = canvas.getContext('2d');
-      if (!context) throw new Error('Gambar tidak dapat diproses oleh browser.');
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = 'high';
-      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-      const optimized = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.84));
-      if (!optimized) throw new Error('Gambar gagal dioptimalkan. Coba file gambar lain.');
-      if (optimized.size > maxStoredImageBytes) throw new Error('Hasil gambar masih terlalu besar. Pilih gambar yang lebih kecil.');
-      return optimized;
-    } finally {
-      bitmap.close();
-    }
-  };
-
-  const optimizeProfileImage = async (file) => {
-    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!acceptedTypes.includes(file.type)) throw new Error('Pilih gambar JPG, PNG, atau WebP.');
-    if (file.size > maxSourceImageBytes) throw new Error('Ukuran gambar maksimal 6 MB.');
-    if (!('createImageBitmap' in window)) throw new Error('Browser ini belum mendukung pemrosesan gambar.');
-    const bitmap = await createImageBitmap(file);
-    try {
-      if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 40000000) throw new Error('Dimensi gambar terlalu besar.');
-      const zoom = Number(siteAssetFields.profile.zoom.value) || 1;
-      const cropSize = Math.min(bitmap.width, bitmap.height) / zoom;
-      const x = (bitmap.width - cropSize) * (Number(siteAssetFields.profile.x.value) / 100);
-      const y = (bitmap.height - cropSize) * (Number(siteAssetFields.profile.y.value) / 100);
-      const canvas = document.createElement('canvas');
-      canvas.width = 1200;
-      canvas.height = 1200;
-      const context = canvas.getContext('2d');
-      if (!context) throw new Error('Gambar tidak dapat diproses oleh browser.');
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = 'high';
-      context.drawImage(bitmap, x, y, cropSize, cropSize, 0, 0, canvas.width, canvas.height);
-      const optimized = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.84));
-      if (!optimized) throw new Error('Crop gambar gagal dibuat.');
-      if (optimized.size > maxStoredImageBytes) throw new Error('Hasil foto masih terlalu besar. Coba atur crop atau pilih gambar lain.');
-      return optimized;
-    } finally {
-      bitmap.close();
-    }
-  };
-
-  const optimizeProjectThumbnail = async (file) => {
-    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!acceptedTypes.includes(file.type)) throw new Error('Pilih gambar JPG, PNG, atau WebP.');
-    if (file.size > maxSourceImageBytes) throw new Error('Ukuran gambar maksimal 6 MB.');
-    if (!('createImageBitmap' in window)) throw new Error('Browser ini belum mendukung pemrosesan gambar.');
-    const bitmap = await createImageBitmap(file);
-    try {
-      if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 40000000) throw new Error('Dimensi gambar terlalu besar.');
-      const ratio = 16 / 10;
-      const zoom = Number(projectCrop.zoom.value) || 1;
-      const cropWidth = Math.min(bitmap.width, bitmap.height * ratio) / zoom;
-      const cropHeight = cropWidth / ratio;
-      const x = (bitmap.width - cropWidth) * (Number(projectCrop.x.value) / 100);
-      const y = (bitmap.height - cropHeight) * (Number(projectCrop.y.value) / 100);
-      const canvas = document.createElement('canvas');
-      canvas.width = 1600;
-      canvas.height = 1000;
-      const context = canvas.getContext('2d');
-      if (!context) throw new Error('Thumbnail tidak dapat diproses oleh browser.');
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = 'high';
-      context.drawImage(bitmap, x, y, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
-      const optimized = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.84));
-      if (!optimized) throw new Error('Crop thumbnail gagal dibuat.');
-      if (optimized.size > maxStoredImageBytes) throw new Error('Thumbnail hasil crop terlalu besar. Coba gambar lain.');
-      return optimized;
-    } finally {
-      bitmap.close();
-    }
-  };
-
   const createStoragePath = (folder = 'projects', extension = 'webp') => {
     if (crypto.randomUUID) return `${folder}/${crypto.randomUUID()}.${extension}`;
     const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -211,9 +127,13 @@
   };
 
   const uploadProjectImage = async (file) => {
-    const image = await optimizeProjectThumbnail(file);
+    const image = await optimizeProjectThumbnail(file, {
+      zoom: projectCrop.zoom.value,
+      x: projectCrop.x.value,
+      y: projectCrop.y.value
+    }, maxSourceImageBytes, maxStoredImageBytes);
     const path = createStoragePath();
-    const { error } = await client.storage.from(storageBucket).upload(path, image, {
+    const { error } = await repository.uploadAsset(path, image, {
       cacheControl: '31536000',
       contentType: 'image/webp',
       upsert: false
@@ -228,8 +148,7 @@
       }
       throw error;
     }
-    const { data } = client.storage.from(storageBucket).getPublicUrl(path);
-    return { path, url: data.publicUrl };
+    return { path, url: repository.getAssetUrl(path) };
   };
 
   const updateSiteAssetPreview = (field, value = '') => {
@@ -253,9 +172,7 @@
   };
 
   const loadSiteSettings = async () => {
-    const { data, error } = await client.from('site_settings')
-      .select('profile_image_url,background_image_url,background_video_url')
-      .eq('id', 'main').maybeSingle();
+    const { data, error } = await repository.getSiteSettings();
     if (error) {
       setStatus(siteSettingsStatus, 'Pengaturan belum dapat dimuat. Jalankan SQL site_settings dari admin/README.md.', true);
       return;
@@ -284,16 +201,22 @@
       extension = 'mp4';
       contentType = 'video/mp4';
     } else {
-      body = field.crop ? await optimizeProfileImage(file) : await optimizeImage(file);
+      body = field.crop
+        ? await optimizeProfileImage(file, {
+          zoom: field.zoom.value,
+          x: field.x.value,
+          y: field.y.value
+        }, maxSourceImageBytes, maxStoredImageBytes)
+        : await optimizeImage(file, maxSourceImageBytes, maxStoredImageBytes);
       extension = 'webp';
       contentType = 'image/webp';
     }
     const path = createStoragePath('settings', extension);
-    const { error } = await client.storage.from(storageBucket).upload(path, body, {
+    const { error } = await repository.uploadAsset(path, body, {
       cacheControl: '3600', contentType, upsert: false
     });
     if (error) throw error;
-    return client.storage.from(storageBucket).getPublicUrl(path).data.publicUrl;
+    return repository.getAssetUrl(path);
   };
 
   const managedStoragePath = (imageUrl) => {
@@ -312,7 +235,7 @@
   const removeManagedImage = async (imageUrl) => {
     const path = managedStoragePath(imageUrl);
     if (!path) return;
-    const { error } = await client.storage.from(storageBucket).remove([path]);
+    const { error } = await repository.removeAssets([path]);
     if (error) console.warn('Gambar lama tidak dapat dihapus dari Storage.');
   };
 
@@ -395,80 +318,17 @@
   };
 
   const filteredProjects = () => {
-    const query = projectSearch.value.trim().toLowerCase();
-    const status = projectFilter.value;
-    return allProjects.filter((project) => {
-      const matchesQuery = !query || String(project.title || '').toLowerCase().includes(query) || (project.tech_stack || []).some((tag) => String(tag).toLowerCase().includes(query));
-      const matchesStatus = status === 'all' || (status === 'published' ? project.published : !project.published);
-      return matchesQuery && matchesStatus;
-    });
-  };
-
-  const renderProjects = (projects) => {
-    const fragment = document.createDocumentFragment();
-    if (!projects.length) {
-      const emptyState = document.createElement('p');
-      emptyState.className = 'empty-state';
-      emptyState.textContent = 'Belum ada project. Tambahkan project pertama Anda.';
-      projectList.replaceChildren(emptyState);
-      return;
-    }
-    projects.forEach((project) => {
-      const item = document.createElement('article');
-      item.className = 'project-item';
-      const main = document.createElement('div');
-      main.className = 'project-item-main';
-      const image = document.createElement('img');
-      image.alt = '';
-      image.loading = 'lazy';
-      image.referrerPolicy = 'no-referrer';
-      image.src = normalizeHttpUrl(project.image_url) || '../media/projects/portfolio.svg';
-      image.addEventListener('error', () => { image.src = '../media/projects/portfolio.svg'; }, { once: true });
-      const details = document.createElement('div');
-      const title = document.createElement('h3');
-      title.textContent = project.title || 'Project tanpa nama';
-      const description = document.createElement('p');
-      description.textContent = project.description || '';
-      const chips = document.createElement('div');
-      chips.className = 'chips';
-      (project.tech_stack || []).slice(0, 12).forEach((tag) => {
-        const chip = document.createElement('span');
-        chip.textContent = tag;
-        chips.appendChild(chip);
-      });
-      details.append(title, description, chips);
-      main.append(image, details);
-
-      const actions = document.createElement('div');
-      actions.className = 'project-item-actions';
-      const status = document.createElement('span');
-      status.className = project.published ? 'badge badge-live' : 'badge';
-      status.textContent = project.published ? 'Ditayangkan' : 'Draft';
-      const editButton = document.createElement('button');
-      editButton.className = 'text-button';
-      editButton.dataset.edit = String(project.id);
-      editButton.type = 'button';
-      editButton.textContent = 'Ubah';
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'danger-button';
-      deleteButton.dataset.delete = String(project.id);
-      deleteButton.type = 'button';
-      deleteButton.textContent = 'Hapus';
-      actions.append(status, editButton, deleteButton);
-      item.append(main, actions);
-      fragment.appendChild(item);
-    });
-    projectList.replaceChildren(fragment);
+    return filterProjects(allProjects, projectSearch.value, projectFilter.value);
   };
 
   const loadProjects = async () => {
-    const { data, error } = await client.from('projects').select('id,title,description,image_url,tech_stack,demo_url,github_url,published,created_at').order('created_at', { ascending: false });
+    const { data, error } = await repository.listProjects();
     if (error) {
       setStatus(formStatus, error.message, true);
       return;
     }
     allProjects = data || [];
-    renderProjects(filteredProjects());
+    renderProjectList(projectList, filteredProjects(), normalizeHttpUrl);
   };
 
   const importLegacyProjects = async () => {
@@ -476,7 +336,7 @@
     const originalLabel = importLegacyButton.textContent;
     importLegacyButton.textContent = 'Mengimpor…';
     try {
-      const { data: existing, error: readError } = await client.from('projects').select('title');
+      const { data: existing, error: readError } = await repository.listProjectTitles();
       if (readError) {
         setStatus(formStatus, readError.message, true);
       } else {
@@ -485,7 +345,7 @@
         if (!missing.length) {
           setStatus(formStatus, 'Semua proyek lama sudah ada di database.');
         } else {
-          const { error } = await client.from('projects').insert(missing);
+          const { error } = await repository.insertProjects(missing);
           if (error) setStatus(formStatus, error.message, true);
           else setStatus(formStatus, `${missing.length} proyek lama berhasil diimpor.`);
         }
@@ -526,11 +386,24 @@
 
   if (!hasCredentials) {
     setupNotice.hidden = false;
-  } else if (!window.supabase) {
-    authView.hidden = false;
-    setStatus(authStatus, 'Layanan autentikasi belum termuat. Periksa koneksi lalu muat ulang halaman.', true);
   } else {
-    client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+    createSupabaseClient(config).then((supabaseClient) => {
+      if (!supabaseClient) {
+        authView.hidden = false;
+        setStatus(authStatus, 'Layanan autentikasi belum termuat. Periksa koneksi lalu muat ulang halaman.', true);
+        return;
+      }
+      client = supabaseClient;
+      repository = createAdminRepository(client, storageBucket);
+      initializeAuthenticatedDashboard();
+    }).catch((error) => {
+      authView.hidden = false;
+      setStatus(authStatus, 'Layanan autentikasi belum termuat. Periksa koneksi lalu muat ulang halaman.', true);
+      console.error('Inisialisasi dashboard admin gagal:', error);
+    });
+  }
+
+  function initializeAuthenticatedDashboard() {
     client.auth.getSession().then(async ({ data, error }) => {
       if (error) {
         authView.hidden = false;
@@ -697,12 +570,9 @@
           github_url: project.github_url,
           published: project.published
         };
-        const query = project.id
-          ? client.from('projects').update(payload).eq('id', project.id)
-          : client.from('projects').insert(payload);
-        const { error } = await query;
+        const { error } = await repository.saveProject(payload, project.id);
         if (error) {
-          if (uploadedImage) await client.storage.from(storageBucket).remove([uploadedImage.path]);
+          if (uploadedImage) await repository.removeAssets([uploadedImage.path]);
           setStatus(formStatus, error.message, true);
           return;
         }
@@ -713,7 +583,7 @@
         setStatus(formStatus, successMessage);
         await loadProjects();
       } catch (error) {
-        if (uploadedImage && !databaseSaved) await client.storage.from(storageBucket).remove([uploadedImage.path]);
+        if (uploadedImage && !databaseSaved) await repository.removeAssets([uploadedImage.path]);
         const message = error?.message || 'Periksa koneksi dan konfigurasi upload gambar di admin/README.md.';
         setStatus(formStatus, message, true);
       } finally {
@@ -729,12 +599,12 @@
       const editId = action.dataset.edit;
       const deleteId = action.dataset.delete;
       if (editId) {
-        const { data, error } = await client.from('projects').select('id,title,description,image_url,tech_stack,demo_url,github_url,published').eq('id', editId).single();
+        const { data, error } = await repository.findProjectById(editId);
         if (error) setStatus(formStatus, error.message, true);
         else if (data) fillForm(data);
       }
       if (deleteId && window.confirm('Hapus proyek ini?')) {
-        const { error } = await client.from('projects').delete().eq('id', deleteId);
+        const { error } = await repository.deleteProject(deleteId);
         if (error) setStatus(formStatus, error.message, true);
         else {
           const deletedProject = allProjects.find((project) => String(project.id) === String(deleteId));
@@ -759,8 +629,12 @@
       passwordForm.reset();
       setStatus(passwordStatus, 'Password berhasil diubah.');
     });
-    projectSearch.addEventListener('input', () => renderProjects(filteredProjects()));
-    projectFilter.addEventListener('change', () => renderProjects(filteredProjects()));
+    projectSearch.addEventListener('input', () => {
+      renderProjectList(projectList, filteredProjects(), normalizeHttpUrl);
+    });
+    projectFilter.addEventListener('change', () => {
+      renderProjectList(projectList, filteredProjects(), normalizeHttpUrl);
+    });
     Object.entries(siteAssetFields).forEach(([key, field]) => {
       field.file.addEventListener('change', () => {
         const file = field.file.files?.[0];
@@ -798,13 +672,13 @@
             values[key] = validUrl;
           } else values[key] = null;
         }
-        const { error } = await client.from('site_settings').upsert({
+        const { error } = await repository.saveSiteSettings({
           id: 'main',
           profile_image_url: values.profile,
           background_image_url: values.background,
           background_video_url: values.video,
           updated_at: new Date().toISOString()
-        }, { onConflict: 'id' });
+        });
         if (error) throw error;
         for (const key of Object.keys(siteAssetFields)) {
           if (previousValues[key] && previousValues[key] !== values[key]) await removeManagedImage(previousValues[key]);

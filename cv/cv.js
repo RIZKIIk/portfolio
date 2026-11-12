@@ -1,12 +1,8 @@
+import { fetchPublishedProjects, fetchPublishedSiteSettings } from '../scripts/services/portfolio-repository.js';
+import { createSupabaseClient } from '../scripts/services/supabase-client.js';
+
 (() => {
-  const root = document.documentElement;
-  const themeToggle = document.querySelector('#theme-toggle');
   const printButton = document.querySelector('#print-cv');
-  const storageKey = 'theme';
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  let savedTheme = null;
-  try { savedTheme = localStorage.getItem(storageKey); } catch (_) { /* Use the system theme. */ }
-  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 
   document.querySelectorAll('img[data-fallback]').forEach((image) => {
     image.addEventListener('error', () => {
@@ -16,42 +12,27 @@
     });
   });
 
-  const setTheme = (theme) => {
-    root.dataset.theme = theme;
-    if (themeToggle) {
-      themeToggle.checked = theme === 'dark';
-      themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Gunakan tema terang' : 'Gunakan tema gelap');
-    }
-    try { localStorage.setItem(storageKey, theme); } catch (_) { /* Theme still applies for this visit. */ }
-  };
-
-  setTheme(initialTheme);
-  themeToggle?.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light'));
   printButton?.addEventListener('click', () => window.print());
 
   // Reuse the portfolio's published project source so the CV stays in sync.
   window.addEventListener('load', async () => {
     const config = window.PORTFOLIO_CONFIG || {};
-    if (!window.supabase || !config.supabaseUrl || !config.supabaseAnonKey) return;
     try {
-      const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
-      const { data: settings } = await client.from('site_settings')
-        .select('profile_image_url').eq('id', 'main').maybeSingle();
+      const client = await createSupabaseClient(config);
+      if (!client) return;
+      const settings = await fetchPublishedSiteSettings(client);
       const profileImage = document.querySelector('.profile-image');
       if (settings?.profile_image_url && profileImage) profileImage.src = settings.profile_image_url;
 
       const grid = document.querySelector('.projects-grid');
       if (!grid) return;
-      const { data, error } = await client.from('projects')
-        .select('title,description,tech_stack,published')
-        .eq('published', true).order('created_at', { ascending: false });
-      if (error || !Array.isArray(data)) return;
-      if (!data.length) {
+      const projects = await fetchPublishedProjects(client);
+      if (!projects.length) {
         grid.replaceChildren(Object.assign(document.createElement('p'), { className: 'muted', textContent: 'Belum ada proyek yang ditayangkan.' }));
         return;
       }
       const fragment = document.createDocumentFragment();
-      data.forEach((project) => {
+      projects.forEach((project) => {
         const card = document.createElement('article');
         card.className = 'panel project-card';
         const title = document.createElement('h3'); title.textContent = project.title || 'Proyek';
@@ -63,7 +44,9 @@
         card.append(title, chips, description); fragment.append(card);
       });
       grid.replaceChildren(fragment);
-    } catch { /* Static project cards remain as a resilient fallback. */ }
+    } catch (error) {
+      console.warn('Konten CV gagal dimuat dari Supabase:', error);
+    }
   }, { once: true });
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

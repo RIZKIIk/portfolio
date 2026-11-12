@@ -9,9 +9,7 @@ import { initializePortfolioSharing } from './scripts/features/sharing.js';
 import { initializePreloader } from './scripts/features/preloader.js';
 import { initializeProjectGallery } from './scripts/features/project-gallery.js';
 import { initializeScrollUi } from './scripts/features/scroll-ui.js';
-import { initializeSkills } from './scripts/features/skills.js';
 import { initializeSiteSettings } from './scripts/features/site-settings.js';
-import { initializeTheme } from './scripts/features/theme.js';
 import { initializeImageFallbacks } from './scripts/core/helpers.js';
 import { createSupabaseClient } from './scripts/services/supabase-client.js';
 
@@ -23,8 +21,6 @@ function initializePortfolio() {
     const applyBackgroundSettings = initializeBackgroundControls();
     initializeMobileMenu();
     initializeHeroTyping();
-    initializeTheme();
-    initializeSkills();
     initializeAnimations(prefersReducedMotion);
     initializeContactForm();
     initializePortfolioSharing();
